@@ -49,7 +49,8 @@ export class UserService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findById(id);
-    return this.userRepository.save({ ...user, ...updateUserDto });
+    const hashedPassword = await bcrypt.hash(updateUserDto.password, 10); 
+    return this.userRepository.save({ ...user, ...updateUserDto, password: hashedPassword });
   }
 
   async delete(id: number): Promise<string> {
