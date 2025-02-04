@@ -23,10 +23,10 @@ export class UserController {
     return this.userService.getUsers();
   }
 
-  @Get(':email')
-  async getUserByEmail(@Param('email') email: string): Promise<User> {
-    return this.userService.findByEmail(email);
-  }
+  // @Get(':email')
+  // async getUserByEmail(@Param('email') email: string): Promise<User> {
+  //   return this.userService.findByEmail(email);
+  // }
 
   @Get(':id')
   async getUserById(@Param('id') id: number): Promise<User> {

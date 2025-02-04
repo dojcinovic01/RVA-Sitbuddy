@@ -34,10 +34,16 @@ export class AuthService {
    * @returns JWT token
    */
   async login(user: any) {
-    //console.log("USER IZ LOGINA", user);
     const payload = { email: user.email, sub: user.id, userType: user.userType };
+  
+    // Generiši token
+    const token = this.jwtService.sign(payload);
+  
+    // Vrati i korisničke podatke i token
     return {
-      access_token: this.jwtService.sign(payload),
+      user: user,       // Korisnički podaci (bez lozinke)
+      token: token      // JWT token
     };
   }
+  
 }

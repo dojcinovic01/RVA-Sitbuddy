@@ -11,7 +11,7 @@ export class AppComponent implements OnInit {
   title = 'sitbuddy-frontend';
 
   public ngOnInit() {
-      fetch('http://localhost:3000/users')
-      .then(async response => console.log(await response.text()));
+      // fetch('http://localhost:3000/users')
+      // .then(async response => console.log(await response.text()));
   }
 }
