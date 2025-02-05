@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { login } from '../../../store/auth/auth.actions';
+import { selectToken, selectUser } from '../../../store/auth/auth.selectors';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,61 +13,159 @@ import { login } from '../../../store/auth/auth.actions';
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   template: `
     <div class="login-container">
-      <h2>Login</h2>
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <label for="email">Email</label>
-        <input id="email" formControlName="email" type="email" />
-        <div *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched">
-          Email is required.
-        </div>
+      <div class="login-box">
+        <h2>Login</h2>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="input-group">
+            <label for="email">Email</label>
+            <input id="email" formControlName="email" type="email" placeholder="Enter your email" />
+            <div *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched">
+              Email is required.
+            </div>
+          </div>
 
-        <label for="password">Password</label>
-        <input id="password" formControlName="password" type="password" />
-        <div *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">
-          Password is required.
-        </div>
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input id="password" formControlName="password" type="password" placeholder="Enter your password" />
+            <div *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">
+              Password is required.
+            </div>
+          </div>
 
-        <button type="submit" [disabled]="loginForm.invalid">Login</button>
-      </form>
+          <button type="submit" [disabled]="loginForm.invalid">Login</button>
+          <p class="register-link">
+            Nemate nalog? <a (click)="navigateToRegister()">Registrujte se</a>.
+          </p>
+
+        </form>
+      </div>
     </div>
   `,
   styles: [
     `
       .login-container {
-        max-width: 300px;
-        margin: auto;
         display: flex;
-        flex-direction: column;
-        gap: 10px;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(135deg, #00224D, #FF204E);
       }
+
+      .login-box {
+        background: linear-gradient(135deg,#FF204E,#00224D);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 350px;
+        text-align: center;
+      }
+
+      h2 {
+        font-family: 'Calibri', sans-serif;
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: rgba(0, 0, 0, 0.8);
+      }
+
+      .input-group {
+        color: rgba(0, 0, 0, 0.8);
+        margin-bottom: 15px;
+        text-align: left;
+      }
+
+      label {
+        font-family: 'Calibri', sans-serif;
+        display: block;
+        font-size: 20px;
+        margin-bottom: 5px;
+        color: rgba(0, 0, 0, 0.8);
+      }
+
       input {
         width: 100%;
-        padding: 8px;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
       }
+
+      input:focus {
+        border-color: #667eea;
+        outline: none;
+      }
+
       button {
-        margin-top: 10px;
-        padding: 8px;
-        background-color: blue;
-        color: white;
+        font-family: 'Calibri', sans-serif; 
+        width: 100%;
+        padding: 10px;
+        background-color:#FF204E;
+        color: black;
+        font-size: 16px;
         border: none;
+        border-radius: 5px;
         cursor: pointer;
+        transition: background 0.3s;
+
       }
+
+      button:hover {
+        background-color: #A0153E;
+      }
+
+      button:disabled {
+        background-color: #FF204E;
+        cursor: not-allowed;
+      }
+
+      .register-link {
+        margin-top: 15px;
+        font-size: 14px;
+        color: black;
+      }
+
+      .register-link a {
+        color: #FF204E;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+
+      .register-link a:hover {
+        color: #A0153E;
+      }
+
     `,
   ],
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  $user!: Observable<any>;
 
-  constructor(private fb: FormBuilder, private store: Store) {
+  constructor(private fb: FormBuilder, private store: Store, private router: Router) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
   }
 
+  ngOnInit(): void {
+    this.store.select(selectToken).subscribe(token => {
+      if (token) {
+        this.router.navigate(['/home']);
+      }
+    });
+  }
+
   onSubmit() {
     if (this.loginForm.valid) {
       this.store.dispatch(login(this.loginForm.value));
+      this.$user = this.store.select(selectUser);
+      console.log('User data:', this.$user);
     }
   }
+
+  navigateToRegister() {
+    this.router.navigate(['/register']);
+  }
+  
 }

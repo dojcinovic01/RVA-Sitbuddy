@@ -6,9 +6,9 @@ export const authReducer = createReducer<AuthState>(
   initialAuthState,
   on(login, state => ({ ...state, loading: true, error: null })),
   on(loginSuccess, (state, { user, token }) => {
-    console.log('Reducer - loginSuccess:', user, token); // Loguj korisnika i token
-    return { ...state, user, token, loading: false };
+    return { ...state, user:user, token:token, loading: false };
   }),
   on(loginFailure, (state, { error }) => ({ ...state, error, loading: false })),
-  on(logout, state => ({ ...initialAuthState }))
+  on(logout, state => ({ ...initialAuthState })),
+  on(logout, () => initialAuthState)
 );

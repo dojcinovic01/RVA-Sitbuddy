@@ -34,7 +34,10 @@ export class AuthService {
   }
 
   getToken(): string | null {
+    if(typeof localStorage  !== 'undefined') {
     return localStorage.getItem('token');
+   }
+   return null;
   }
 
   saveAuthData(user: any, token: string): void {
@@ -43,7 +46,30 @@ export class AuthService {
   }
 
   getUser(): any | null {
+    if(typeof localStorage  !== 'undefined') {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
+    }
+    return null;
   }
+
+  register(
+    name: string, 
+    email: string, 
+    password: string, 
+    location: string, 
+    phoneNumber: string, 
+    userType: 'parent' | 'babysitter'
+  ): Observable<{ user: any; token: string }> {
+    return this.http.post<{ user: any; token: string }>('http://localhost:3000/users/register', { 
+      name, 
+      email, 
+      password, 
+      location, 
+      phoneNumber, 
+      userType 
+    });
+  }
+  
+  
 }

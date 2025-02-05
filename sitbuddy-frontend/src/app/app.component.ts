@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { loadAuthState } from './store/auth/auth.actions';
 
 @Component({
   selector: 'app-root',
@@ -8,10 +10,9 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  title = 'sitbuddy-frontend';
+  constructor(private store: Store) {}
 
-  public ngOnInit() {
-      // fetch('http://localhost:3000/users')
-      // .then(async response => console.log(await response.text()));
+  ngOnInit() {
+    this.store.dispatch(loadAuthState());
   }
 }
