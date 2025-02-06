@@ -12,51 +12,51 @@ import { Router } from '@angular/router';
   template: `
     <div class="register-container">
       <div class="register-box">
-        <h2>Register</h2>
+        <h2>Registruj se</h2>
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
           <div class="input-group">
-            <label for="name">Name</label>
-            <input id="name" formControlName="name" type="text" placeholder="Enter your name" />
+            <label for="fullName">Ime i prezime</label>
+            <input id="fullName" formControlName="fullName" type="text" placeholder="Unesi svoje ime i prezime" />
           </div>
 
           <div class="input-group">
-            <label for="email">Email</label>
-            <input id="email" formControlName="email" type="email" placeholder="Enter your email" />
+            <label for="email">E-adresa</label>
+            <input id="email" formControlName="email" type="email" placeholder="Unesite e-adresu" />
           </div>
 
           <div class="input-group">
-            <label for="password">Password</label>
-            <input id="password" formControlName="password" type="password" placeholder="Enter your password" />
+            <label for="password">Lozinka</label>
+            <input id="password" formControlName="password" type="password" placeholder="Unesite vašu lozinku (više od 5 karaktera)" />
           </div>
 
           <div class="input-group">
-            <label for="confirmPassword">Confirm Password</label>
-            <input id="confirmPassword" formControlName="confirmPassword" type="password" placeholder="Confirm your password" />
+            <label for="confirmPassword">Potvrdite lozinku</label>
+            <input id="confirmPassword" formControlName="confirmPassword" type="password" placeholder="Potvrdite lozinku" />
           </div>
 
           <div class="input-group">
-            <label for="location">Location</label>
-            <input id="location" formControlName="location" type="text" placeholder="Enter your location" />
+            <label for="location">Lokacija</label>
+            <input id="location" formControlName="location" type="text" placeholder="Unesite vašu lokaciju" />
           </div>
 
           <div class="input-group">
-            <label for="phoneNumber">Phone Number</label>
-            <input id="phoneNumber" formControlName="phoneNumber" type="tel" placeholder="Enter your phone number" />
+            <label for="phoneNumber">Broj telefona</label>
+            <input id="phoneNumber" formControlName="phoneNumber" type="tel" placeholder="Unesite vaš broj telefona" />
           </div>
 
           <div class="input-group">
-            <label for="userType">User Type</label>
+            <label for="userType">Tip korisnika</label>
             <select id="userType" formControlName="userType">
-              <option value="" disabled>Select User Type</option>
-              <option value="parent">Parent</option>
-              <option value="babysitter">Babysitter</option>
+              <option value="" disabled>Izaberite </option>
+              <option value="parent">Roditelj</option>
+              <option value="sitter">Siter</option>
             </select>
           </div>
 
-          <button type="submit" [disabled]="registerForm.invalid">Register</button>
+          <button type="submit" [disabled]="registerForm.invalid">Registruj se</button>
 
           <p class="login-link">
-            Vec imate nalog? <a (click)="navigateToLogin()">Prijavi se</a>.
+            Već imate nalog? <a (click)="navigateToLogin()">Prijavi se</a>.
           </p>
 
         </form>
@@ -162,7 +162,7 @@ export class RegisterComponent {
 
   constructor(private fb: FormBuilder, private store: Store, private router: Router) {
     this.registerForm = this.fb.group({
-      name: ['', Validators.required],
+      fullName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
@@ -174,13 +174,13 @@ export class RegisterComponent {
 
   onSubmit() {
     if (this.registerForm.valid) {
-      const { name, email, password, confirmPassword, location, phoneNumber, userType } = this.registerForm.value;
+      const { fullName, email, password, confirmPassword, location, phoneNumber, userType } = this.registerForm.value;
       if (password !== confirmPassword) {
-        alert("Passwords do not match!");
+        alert("Lozinke se ne podudaraju!");
         return;
       }
 
-      this.store.dispatch(register({ name, email, password, location, phoneNumber, userType }));
+      this.store.dispatch(register({ fullName, email, password, location, phoneNumber, userType }));
     }
   }
 

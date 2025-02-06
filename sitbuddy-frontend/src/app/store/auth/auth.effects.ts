@@ -71,16 +71,21 @@ export class AuthEffects {
   register$ = createEffect(() =>
     this.actions$.pipe(
       ofType(register),
-      mergeMap(({ name, email, password, location, phoneNumber, userType }) =>
-        this.authService.register(name, email, password, location, phoneNumber, userType).pipe(
-          map(response => {
-            this.authService.saveAuthData(response.user, response.token);
-            return registerSuccess({ user: response.user, token: response.token });
+      mergeMap(({ fullName, email, password, location, phoneNumber, userType }) =>
+        this.authService.register(fullName, email, password, location, phoneNumber, userType).pipe(
+          map(() => {
+            alert('Registracija uspešna! Preusmeravanje na login stranicu...');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000);
+  
+            return registerSuccess(); 
           }),
           catchError(error => of(registerFailure({ error: error.message })))
         )
       )
     )
   );
+  
   
 }

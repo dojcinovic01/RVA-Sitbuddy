@@ -28,7 +28,7 @@ export class FollowService {
     const follow = this.followRepository.create({ follower, following });
     await this.followRepository.save(follow);
 
-    return `User ${follower.name} is now following ${following.name}.`;
+    return `User ${follower.fullName} is now following ${following.fullName}.`;
   }
 
   async unfollowUser(followerId: number, followingId: number): Promise<string> {

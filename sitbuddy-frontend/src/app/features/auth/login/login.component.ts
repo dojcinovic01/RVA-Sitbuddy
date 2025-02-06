@@ -14,25 +14,25 @@ import { Router } from '@angular/router';
   template: `
     <div class="login-container">
       <div class="login-box">
-        <h2>Login</h2>
+        <h2>Prijavi se</h2>
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
           <div class="input-group">
-            <label for="email">Email</label>
-            <input id="email" formControlName="email" type="email" placeholder="Enter your email" />
+            <label for="email">E-adresa</label>
+            <input id="email" formControlName="email" type="email" placeholder="Unesite vašu e-adresu" />
             <div *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched">
-              Email is required.
+              Morate uneti e-adresu.
             </div>
           </div>
 
           <div class="input-group">
-            <label for="password">Password</label>
-            <input id="password" formControlName="password" type="password" placeholder="Enter your password" />
+            <label for="password">Lozinka</label>
+            <input id="password" formControlName="password" type="password" placeholder="Unesite vašu lozinku" />
             <div *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">
-              Password is required.
+              Morate uneti lozinku.
             </div>
           </div>
 
-          <button type="submit" [disabled]="loginForm.invalid">Login</button>
+          <button type="submit" [disabled]="loginForm.invalid">Prijavi se</button>
           <p class="register-link">
             Nemate nalog? <a (click)="navigateToRegister()">Registrujte se</a>.
           </p>

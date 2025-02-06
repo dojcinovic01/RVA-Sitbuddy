@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, forwardRef, Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./user.entity";
@@ -17,13 +17,25 @@ export class UserService {
 
   
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10); 
-    const user = this.userRepository.create({
-      ...createUserDto,
-      password: hashedPassword, 
-    });
-    return this.userRepository.save(user);
+    try {
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+      
+      const user = this.userRepository.create({
+        ...createUserDto,
+        password: hashedPassword,
+      });
+  
+      return await this.userRepository.save(user);
+  
+    } catch (error) {
+      // ✅ Loguj nepoznate greške radi lakšeg debugovanja
+      console.error('Greška prilikom kreiranja korisnika:', error);
+  
+      // ✅ Generička greška za ostale slučajeve
+      throw new InternalServerErrorException('Došlo je do greške prilikom registracije. Pokušajte ponovo.');
+    }
   }
+  
 
   async getUsers(): Promise<User[]> {
     const users = await this.userRepository.find();
@@ -56,7 +68,7 @@ export class UserService {
   async delete(id: number): Promise<string> {
     const user = await this.findById(id);
     this.userRepository.remove(user);
-    return `Korisnik sa id ${id} je uspješno obrisan.`;
+    return `Korisnik sa id ${id} je uspešno obrisan.`;
   }
 
   async updateProfilePicture(userId: number, filename: string): Promise<User> {

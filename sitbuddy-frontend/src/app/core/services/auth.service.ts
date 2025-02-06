@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 interface LoginResponse {
   user: any;
@@ -18,9 +18,14 @@ export class AuthService {
     //console.log('AuthService initialized');
   }
 
+  
   login(email: string, password: string): Observable<LoginResponse> {
-    console.log('AuthService.login:', email, password);
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, password });
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, password }).pipe(
+      catchError(error => {
+        alert(error.error?.message || 'Greška prilikom prijave');
+        return throwError(() => new Error(error.error?.message || 'Greška prilikom prijave'));
+      })
+    );
   }
   
 
@@ -54,15 +59,16 @@ export class AuthService {
   }
 
   register(
-    name: string, 
+    fullName: string, 
     email: string, 
     password: string, 
     location: string, 
     phoneNumber: string, 
-    userType: 'parent' | 'babysitter'
+    userType: 'parent' | 'sitter'
   ): Observable<{ user: any; token: string }> {
+    console.log('AuthService.register:', fullName, email, password, location, phoneNumber, userType);
     return this.http.post<{ user: any; token: string }>('http://localhost:3000/users/register', { 
-      name, 
+      fullName, 
       email, 
       password, 
       location, 

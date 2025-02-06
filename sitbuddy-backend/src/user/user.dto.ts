@@ -11,7 +11,7 @@ import { UserType } from "src/user/user.entity";
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  fullName: string;
 
   @IsEmail()
   @IsNotEmpty()
@@ -46,7 +46,7 @@ export class CreateUserDto {
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
-  name?: string;
+  fullName?: string;
 
   @IsOptional()
   @IsEmail()

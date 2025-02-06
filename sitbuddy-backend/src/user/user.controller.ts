@@ -12,11 +12,18 @@ import { createFileStorageConfig } from '../file-storage.util'; // Import funkci
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // Endpoint za registraciju korisnika
+  
   @Post("register")
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.userService.create(createUserDto); // Pozivamo servis za kreiranje korisnika
+    try {
+      console.log('Pokušaj registracije:', createUserDto);
+      return await this.userService.create(createUserDto);
+    } catch (error) {
+      console.error('Greška prilikom registracije:', error.message);
+      throw error; // NestJS automatski šalje odgovarajući HTTP status code
+    }
   }
+
 
   @Get('allUsers')
   getAllUsers(): Promise<User[]> {

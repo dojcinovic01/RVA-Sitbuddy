@@ -20,19 +20,19 @@ export const loadAuthState = createAction('[Auth] Load Auth State');
 export const register = createAction(
   '[Auth] Register',
   props<{ 
-    name: string; 
+    fullName: string; 
     email: string; 
     password: string; 
     location: string; 
     phoneNumber: string; 
-    userType: 'parent' | 'babysitter'; // Umesto `any`, koristi konkretne vrednosti
+    userType: 'parent' | 'sitter'; // Umesto `any`, koristi konkretne vrednosti
   }>()
 );
 
 export const registerSuccess = createAction(
-  '[Auth] Register Success',
-  props<{ user: any; token: string }>()
+  '[Auth] Register Success'
 );
+
 
 export const registerFailure = createAction(
   '[Auth] Register Failure',
