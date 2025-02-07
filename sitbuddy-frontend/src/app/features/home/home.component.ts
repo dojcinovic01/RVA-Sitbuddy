@@ -3,31 +3,51 @@ import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { logout } from '../../store/auth/auth.actions';
 import { Router } from '@angular/router';
+import { NavbarComponent } from "../navbar/navbar.component";
+import { selectToken } from '../../store/auth/auth.selectors';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NavbarComponent],
   template: `
-    <div>
+  <div class="home-container">
+    <app-navbar></app-navbar>
+    <div class="homePage">
       <h1>Welcome to Home Page!</h1>
       <p>You are successfully logged in.</p>
-      <button (click)="onLogout()">Logout</button>
-    </div>
+    </div>  
+  </div>
   `,
   styles: [
     `
-      div {
-        text-align: center;
-        margin-top: 50px;
+      .home-container {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background:rgb(255, 255, 255);
       }
-      button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background-color: red;
+
+      .homePage {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
         color: white;
-        border: none;
-        cursor: pointer;
+      }
+
+      h1 {
+        font-size: 32px;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.2);
+      }
+
+      p {
+        font-size: 18px;
+        opacity: 0.9;
       }
     `,
   ],
@@ -35,8 +55,11 @@ import { Router } from '@angular/router';
 export class HomeComponent {
   constructor(private store: Store, private router: Router) {}
 
-  onLogout() {
-    this.store.dispatch(logout());
-    this.router.navigate(['/login']); // Preusmeri korisnika na login
+  ngOnInit(): void {
+      this.store.select(selectToken).subscribe(token => {
+        if (!token) {
+          this.router.navigate(['/login']);
+        }
+      });
   }
 }

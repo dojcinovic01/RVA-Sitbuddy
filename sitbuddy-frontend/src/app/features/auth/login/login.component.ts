@@ -42,7 +42,7 @@ import { Router } from '@angular/router';
     </div>
   `,
   styles: [
-    `
+    `      
       .login-container {
         display: flex;
         justify-content: center;
@@ -83,7 +83,8 @@ import { Router } from '@angular/router';
       }
 
       input {
-        width: 100%;
+        font-family: 'Calibri', sans-serif;
+        width: 94%;
         padding: 10px;
         font-size: 16px;
         border: 1px solid #ccc;
@@ -119,12 +120,14 @@ import { Router } from '@angular/router';
       }
 
       .register-link {
+        font-family: 'Calibri', sans-serif;
         margin-top: 15px;
         font-size: 14px;
         color: black;
       }
 
       .register-link a {
+        font-family: 'Calibri', sans-serif;
         color: #FF204E;
         cursor: pointer;
         text-decoration: underline;

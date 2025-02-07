@@ -17,9 +17,7 @@ import { authReducer } from './store/auth/auth.reducer';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withFetch()),
-    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideClientHydration(withEventReplay()),
     provideStore(reducers),
     provideEffects(appEffects),
 

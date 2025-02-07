@@ -71,7 +71,7 @@ import { Router } from '@angular/router';
       align-items: center;
       height: 100vh;
       background: linear-gradient(135deg, #00224D, #FF204E);
-      padding: 20px;
+      padding: 10px;
     }
 
     .register-box {
@@ -85,12 +85,14 @@ import { Router } from '@angular/router';
     }
 
     h2 {
+      font-family: 'Calibri', sans-serif;
       font-size: 22px; /* Smanjena veličina naslova */
       margin-bottom: 15px;
       color: rgba(0, 0, 0, 0.8);
     }
 
     .input-group {
+      font-family: 'Calibri', sans-serif;
       text-align: left;
       margin-bottom: 15px; /* Smanjen razmak između polja */
     }
@@ -98,15 +100,25 @@ import { Router } from '@angular/router';
     label {
       display: block;
       font-family: 'Calibri', sans-serif;
-      font-size: 14px; /* Smanjena veličina teksta */
+      font-size: 16px; /* Smanjena veličina teksta */
       color: rgba(0, 0, 0, 0.8);
       margin-bottom: 5px;
     }
 
-    input, select {
+    input{
+      font-family: 'Calibri', sans-serif;
       width: 90%;
-      padding: 8px; /* Smanjen padding */
-      font-size: 14px; /* Smanjena veličina teksta */
+      padding: 10px; /* Smanjen padding */
+      font-size: 16px; /* Smanjena veličina teksta */
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    select{
+      font-family: 'Calibri', sans-serif;
+      width: 100%;
+      padding: 10px; /* Smanjen padding */
+      font-size: 16px; /* Smanjena veličina teksta */
       border: 1px solid #ccc;
       border-radius: 5px;
     }
@@ -134,18 +146,21 @@ import { Router } from '@angular/router';
       }
 
       input, select, button {
-        font-size: 13px;
-        padding: 6px;
+        font-family: 'Calibri', sans-serif;
+        font-size: 16px;
+        padding: 10px;
       }
     }
 
     .login-link {
+        font-family: 'Calibri', sans-serif;
         margin-top: 15px;
         font-size: 14px;
         color: black;
       }
 
       .login-link a {
+        font-family: 'Calibri', sans-serif;
         color: #FF204E;
         cursor: pointer;
         text-decoration: underline;
