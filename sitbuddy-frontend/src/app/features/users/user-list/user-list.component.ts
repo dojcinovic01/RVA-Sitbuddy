@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { select, Store } from '@ngrx/store';
-import { selectUser } from '../../../store/auth/auth.selectors';
+import { selectUserAuth } from '../../../store/auth/auth.selectors';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -25,7 +25,7 @@ export class UserListComponent implements OnInit {
   user$: Observable<any>;
 
   constructor(private store: Store) {
-    this.user$ = this.store.select(selectUser);
+    this.user$ = this.store.select(selectUserAuth);
   }
 
   ngOnInit(): void {

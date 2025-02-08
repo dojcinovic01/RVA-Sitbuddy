@@ -56,14 +56,27 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`Korisnik sa id ${id} nije pronađen.`);
     }
+    console.log('Pokušaj pronalaska korisnika:', user);
     return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    console.log('Pokušaj ažuriranja korisnika:', updateUserDto);
     const user = await this.findById(id);
-    const hashedPassword = await bcrypt.hash(updateUserDto.password, 10); 
+  
+    if(updateUserDto.oldPassword){
+      const isPasswordValid = await bcrypt.compare(updateUserDto.oldPassword, user.password);
+      if (!isPasswordValid) {
+        console.log('Stara lozinka nije ispravna.');
+        throw new ConflictException('Stara lozinka nije ispravna.');
+      }
+    }
+    
+    const hashedPassword = updateUserDto.newPassword ? await bcrypt.hash(updateUserDto.newPassword, 10) : user.password;
+  
     return this.userRepository.save({ ...user, ...updateUserDto, password: hashedPassword });
   }
+  
 
   async delete(id: number): Promise<string> {
     const user = await this.findById(id);

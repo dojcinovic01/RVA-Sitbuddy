@@ -1,52 +1,87 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
+import { ReactiveFormsModule } from '@angular/forms';
 import { logout } from '../../store/auth/auth.actions';
 import { Router } from '@angular/router';
 import { NavbarComponent } from "../navbar/navbar.component";
 import { MatIconModule } from '@angular/material/icon';
-import { selectToken } from '../../store/auth/auth.selectors';
+import { selectToken, selectUserAuth} from '../../store/auth/auth.selectors';
+import { selectUser } from '../../store/user/user.selectors';
+import { Observable, take } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { loadUser, updateUser } from '../../store/user/user.actions';
 
 @Component({
   selector: 'app-profile',
-  standalone: true,
-  imports: [CommonModule, NavbarComponent, MatIconModule],
+  imports: [CommonModule, NavbarComponent, MatIconModule, ReactiveFormsModule],
   template: `
+  <app-navbar></app-navbar>
   <div class="profile-container">
-    <app-navbar></app-navbar>
     <div class="profile-content">
-      <div class="avatar">JD</div>
-      <h1>John Doe</h1>
-      <p>Email: johndoeexample.com</p>
-      <button class="logout-btn" (click)="onLogout()">
-        <mat-icon>logout</mat-icon> Logout
-      </button>
+      <div class="avatar">{{ (user$ | async)?.initials }}</div>
+      <form [formGroup]="dataForm" >
+          <div class="input-group">
+            <label for="fullName">Ime i prezime</label>
+            <input id="fullName" formControlName="fullName" type="text" placeholder="{{(user$ | async)?.fullName}}" />
+          </div>
+
+          <div class="input-group">
+            <label for="oldPassword">Stara lozinka</label>
+            <input id="oldPassword" formControlName="oldPassword" type="password" placeholder="Unesite vašu staru lozinku" />
+          </div>
+
+          <div class="input-group">
+            <label for="newPassword">Nova lozinka</label>
+            <input id="newPassword" formControlName="newPassword" type="password" placeholder="Nova lozinka" />
+          </div>
+
+          <div class="input-group">
+            <label for="location">Lokacija</label>
+            <input id="location" formControlName="location" type="text" placeholder="{{(user$ | async)?.location}}"/>
+          </div>
+
+          <div class="input-group">
+            <label for="phoneNumber">Broj telefona</label>
+            <input id="phoneNumber" formControlName="phoneNumber" type="tel" placeholder="{{(user$ | async)?.phoneNumber}}" />
+          </div>
+
+          <span class="update-icon"  (click)="updateData()">
+            <mat-icon>update</mat-icon>
+            <p class="azuriraj-text">Ažuriraj podatke</p>
+          </span>
+
+        </form>
     </div>  
   </div>
   `,
-  styles: [
-    `
+  styles: [`
       .profile-container {
         display: flex;
         flex-direction: column;
-        min-height: 100vh;
-        background: #021526;
-        color: white;
+        background: #FFFFFF;
+        justify-content: center; /* Centriranje vertikalno */
+        align-items: center; /* Centriranje horizontalno */
+        height: 95vh;
       }
 
       .profile-content {
-        flex: 1;
+        justify-content: center; /* Centriranje vertikalno */
+        align-items: center; /* Centriranje horizontalno */
+        background: linear-gradient(135deg, #FF204E, #00224D);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        border-radius: 15px;
+        padding: 30px;
+        width: 35%; /* Ograničava širinu, ali omogućava responsivnost */
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         text-align: center;
-        padding: 20px;
       }
-
       .avatar {
-        width: 80px;
-        height: 80px;
+        width: 40px;
+        height: 40px;
         background: #FF204E;
         color: white;
         font-size: 28px;
@@ -55,19 +90,10 @@ import { selectToken } from '../../store/auth/auth.selectors';
         justify-content: center;
         align-items: center;
         border-radius: 50%;
-        margin-bottom: 15px;
       }
-
-      h1 {
-        font-size: 28px;
-        margin-bottom: 8px;
+      h1, p {
+        color:rgb(255, 255, 255);
       }
-
-      p {
-        font-size: 16px;
-        opacity: 0.9;
-      }
-
       .logout-btn {
         display: flex;
         align-items: center;
@@ -82,30 +108,177 @@ import { selectToken } from '../../store/auth/auth.selectors';
         border-radius: 5px;
         transition: background 0.3s;
       }
-
       .logout-btn:hover {
         background: #A0153E;
       }
-
       mat-icon {
         font-size: 20px;
       }
-    `,
-  ],
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 25px;
+        max-width: 400px;
+        width: 100%;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        
+      }
+
+      label {
+        font-weight: bold;
+        color: #FFFFFF;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+        background:rgb(233, 25, 88);
+        color: #FFFFFF;
+        border-color: #FF204E;
+      }
+
+      input::placeholder {
+        color: #FFFFFF; 
+        font-style: italic;
+        opacity: 1; 
+      }
+
+
+      input:focus {
+        border-color: #FF204E;
+        outline: none;
+        box-shadow: 0 0 5px rgba(255, 32, 78, 0.5);
+      }
+
+      .mat-icon {
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+      }
+      
+      .update-icon {
+        display: flex;
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center; 
+        cursor: pointer;
+        gap: 5px; 
+        color: white;
+        transition: transform 0.2s, color 0.3s;
+      }
+
+      .update-icon:hover mat-icon{
+        transform: scale(1.1);
+        color: #FF204E;
+      }
+
+      .update-icon:hover{
+        transform: scale(1.1);
+        color: #FF204E;
+      }
+
+      .update-icon mat-icon {
+        font-size: 28px;
+      }
+
+      .azuriraj-text {
+        font-size: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #FF204E;
+      }
+
+  `],
 })
 export class ProfileComponent {
-  constructor(private store: Store, private router: Router) {}
+  user$: Observable<any>;
+  token$: Observable<string | null>;
+  dataForm: FormGroup;
+  userForm: any;
 
-   ngOnInit(): void {
-        this.store.select(selectToken).subscribe(token => {
-          if (!token) {
-            this.router.navigate(['/login']);
+  constructor(private store: Store, private router: Router, private fb: FormBuilder) {
+    this.user$ = this.store.select(selectUserAuth);
+    this.token$ = this.store.select(selectToken);
+    this.dataForm = this.fb.group({
+        fullName: ['', Validators.required],
+        oldPassword: ['', [Validators.required, Validators.minLength(6)]],
+        newPassword: ['', Validators.required],
+        location: ['', Validators.required],
+        phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+    });
+  }
+
+  ngOnInit(): void {
+    // Dohvatanje korisnika prilikom učitavanja
+    this.token$.pipe(take(1)).subscribe(token => {
+      if (token) {
+        this.user$.pipe(take(1)).subscribe(user => {
+          if (user && user.id) {
+            console.log(user);
+            this.store.dispatch(loadUser({ userId: user.id }));
           }
         });
-}
+      }
+    });
+  
+    // Ažuriranje forme kada se korisnik promeni (nakon uspešnog update-a)
+    this.store.select(selectUser).subscribe(user => {
+      if (user) {
+        console.log(user);
+        this.dataForm.patchValue({
+          fullName: user.fullName || '',
+          location: user.location || '',
+          phoneNumber: user.phoneNumber || ''
+        });
+      }
+    });
+  }
+  
 
-    onLogout() {
-        this.store.dispatch(logout());
-        this.router.navigate(['/login']);
-    }
+  updateData() {
+    this.user$.pipe(take(1)).subscribe(user => { 
+      if (user) {
+        console.log("USO");
+        const updatedData = this.dataForm.value;
+  
+        // Ukloni polja koja su prazna
+        Object.keys(updatedData).forEach(key => {
+          if (!updatedData[key]) {
+            delete updatedData[key];
+          }
+        });
+  
+        if (!updatedData.newPassword) {
+          delete updatedData.oldPassword;
+        }
+  
+        // Dispečujemo update akciju
+        this.store.dispatch(updateUser({ userId: user.id, updatedData }));
+  
+        // Nakon uspešnog update-a, ponovo učitaj korisnika
+        this.store.select(selectUser).pipe(take(1)).subscribe(updatedUser => {
+          if (updatedUser) {
+            this.dataForm.patchValue({
+              fullName: updatedUser.fullName || '',
+              location: updatedUser.location || '',
+              phoneNumber: updatedUser.phoneNumber || ''
+            });
+          }
+        });
+      }
+    });
+  }
+  
+  
 }

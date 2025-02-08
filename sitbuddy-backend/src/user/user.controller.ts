@@ -37,13 +37,14 @@ export class UserController {
 
   @Get(':id')
   async getUserById(@Param('id') id: number): Promise<User> {
-    return this.userService.findById(id);
+    return this.userService.findById(Number(id));
   }
 
   @Patch(':id')
-  async updateUserById(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto): Promise<User> {
-    return this.userService.update(id, updateUserDto);
+  async updateUserById(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
+    return this.userService.update(Number(id), updateUserDto);
   }
+
 
   @Delete(':id')
   async deleteUserById(@Param('id') id:number): Promise<string> {
