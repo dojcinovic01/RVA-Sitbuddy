@@ -1,7 +1,8 @@
 import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { loadAuthState } from './store/auth/auth.actions';
+import { checkAuthStatus } from './store/auth/auth.actions';
+
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,6 @@ export class AppComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit() {
-    this.store.dispatch(loadAuthState());
+    this.store.dispatch(checkAuthStatus());
   }
 }

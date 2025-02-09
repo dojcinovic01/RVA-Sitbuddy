@@ -2,10 +2,11 @@ import { Controller, Post, UseGuards, Request, Get, Body, UnauthorizedException 
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
 import { JwtAuthGuard } from './jwt.auth.guard';
+import { UserService } from 'src/user/user.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly userService: UserService) {}
 
   // Login endpoint
   @UseGuards(LocalAuthGuard)
@@ -18,7 +19,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
-    //console.log('User profile:', req.user); 
-    return req.user;
+    return this.userService.findById(req.user.userId);
   }
 }

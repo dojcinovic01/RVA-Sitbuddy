@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { login } from '../../../store/auth/auth.actions';
-import { selectToken, selectUserAuth } from '../../../store/auth/auth.selectors';
+import { selectToken } from '../../../store/auth/auth.selectors';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { selectUser } from '../../../store/user/user.selectors';
@@ -163,7 +163,7 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       this.store.dispatch(login(this.loginForm.value));
-      this.$user = this.store.select(selectUserAuth);
+      this.$user = this.store.select(selectUser);
       console.log('User data:', this.$user);
     }
   }

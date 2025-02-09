@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from '../../core/services/auth.service';
-import { login, loginSuccess, loginFailure, loadAuthState, logout, register, registerSuccess, registerFailure } from './auth.actions';
-import { mergeMap, map, catchError, tap } from 'rxjs/operators';
+import { login, loginSuccess, loginFailure, logout, register, registerSuccess, registerFailure, checkAuthStatus } from './auth.actions';
+import { mergeMap, map, catchError, tap, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
+import { loadUserSuccess } from '../user/user.actions';
+import { UserService } from '../../core/services/user.service';
 
 @Injectable()
 export class AuthEffects {
   constructor(
     private actions$: Actions<any>,
     private authService: AuthService,
+    private userService: UserService,
     private router: Router
   ) {
-    //console.log('Actions service initialized:', actions$);
+    
   }
 
   login$ = createEffect(() =>
@@ -22,8 +25,8 @@ export class AuthEffects {
       mergeMap(action =>
         this.authService.login(action.email, action.password).pipe(
           map(response => {
-            this.authService.saveAuthData(response.user, response.token);
-            return loginSuccess({ user: response.user, token: response.token });
+            this.authService.saveAuthData(response.token);
+            return loginSuccess({ token: response.token });
           }),
           catchError(error => of(loginFailure({ error: error.message })))
         )
@@ -31,14 +34,40 @@ export class AuthEffects {
     )
   );
 
-  loadAuthState$ = createEffect(() =>
+  loadUserAfterLogin$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(loadAuthState),
+      ofType(loginSuccess),
+      switchMap(() =>
+        this.userService.getCurrentUser().pipe( // Poziva /auth/profile i čeka odgovor
+          map(user => loadUserSuccess({ user })), // Prosleđuje dobijene podatke u store
+          catchError(error => {
+            console.error("Greška pri učitavanju korisnika:", error);
+            return of({ type: 'LOAD_USER_FAILURE' }); // Izbegavanje rušenja aplikacije
+          })
+        )
+      )
+    )
+  );
+  
+
+  redirectAfterLogin$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(loginSuccess),
+        tap(() => {
+          this.router.navigate(['/home']);
+        })
+      ),
+    { dispatch: false }
+  );
+
+  checkAutStatus$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(checkAuthStatus),
       map(() => {
-        const user = this.authService.getUser();
         const token = this.authService.getToken();
-        if (user && token) {
-          return loginSuccess({ user, token });
+        if (token) {
+          return loginSuccess({ token });
         } else {
           return { type: 'NO_ACTION' }; // Ako nema podataka, ne radimo ništa
         }
@@ -46,15 +75,6 @@ export class AuthEffects {
     )
   );
 
-  redirectAfterLogin$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(loginSuccess),
-      tap(() => {
-        this.router.navigate(['/home']);
-      })
-    ),
-    { dispatch: false }
-  );
 
   logout$ = createEffect(
     () =>
@@ -86,6 +106,7 @@ export class AuthEffects {
       )
     )
   );
+
   
   
 }

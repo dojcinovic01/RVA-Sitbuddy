@@ -14,11 +14,8 @@ interface LoginResponse {
 export class AuthService {
   private apiUrl = 'http://localhost:3000/auth'; // Postavi URL backend API-ja
 
-  constructor(private http: HttpClient) {
-    //console.log('AuthService initialized');
-  }
+  constructor(private http: HttpClient) {}
 
-  
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, password }).pipe(
       catchError(error => {
@@ -27,11 +24,9 @@ export class AuthService {
       })
     );
   }
-  
 
   logout(): void {
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
   }
 
   isAuthenticated(): boolean {
@@ -39,23 +34,11 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    if(typeof localStorage  !== 'undefined') {
-    return localStorage.getItem('token');
-   }
-   return null;
+    return typeof localStorage !== 'undefined' ? localStorage.getItem('token') : null;
   }
 
-  saveAuthData(user: any, token: string): void {
-    localStorage.setItem('user', JSON.stringify(user));
+  saveAuthData(token: string): void {
     localStorage.setItem('token', token);
-  }
-
-  getUser(): any | null {
-    if(typeof localStorage  !== 'undefined') {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
-    }
-    return null;
   }
 
   register(
@@ -66,7 +49,6 @@ export class AuthService {
     phoneNumber: string, 
     userType: 'parent' | 'sitter'
   ): Observable<{ user: any; token: string }> {
-    console.log('AuthService.register:', fullName, email, password, location, phoneNumber, userType);
     return this.http.post<{ user: any; token: string }>('http://localhost:3000/users/register', { 
       fullName, 
       email, 
@@ -76,6 +58,4 @@ export class AuthService {
       userType 
     });
   }
-  
-  
 }

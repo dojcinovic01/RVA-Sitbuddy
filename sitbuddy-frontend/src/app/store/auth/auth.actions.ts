@@ -7,7 +7,7 @@ export const login = createAction(
 
 export const loginSuccess = createAction(
   '[Auth] Login Success',
-  props<{ user: any; token: string }>()
+  props<{ token: string }>()
 );
 
 export const loginFailure = createAction(
@@ -15,7 +15,7 @@ export const loginFailure = createAction(
   props<{ error: string }>()
 );
 
-export const loadAuthState = createAction('[Auth] Load Auth State');
+export const logout = createAction('[Auth] Logout');
 
 export const register = createAction(
   '[Auth] Register',
@@ -39,5 +39,6 @@ export const registerFailure = createAction(
   props<{ error: string }>()
 );
 
+export const checkAuthStatus = createAction('[Auth] Check Auth Status');
 
-export const logout = createAction('[Auth] Logout');
+

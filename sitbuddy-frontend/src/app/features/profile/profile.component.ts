@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { ReactiveFormsModule } from '@angular/forms';
-import { logout } from '../../store/auth/auth.actions';
 import { Router } from '@angular/router';
 import { NavbarComponent } from "../navbar/navbar.component";
 import { MatIconModule } from '@angular/material/icon';
-import { selectToken, selectUserAuth} from '../../store/auth/auth.selectors';
+import { selectToken} from '../../store/auth/auth.selectors';
 import { selectUser } from '../../store/user/user.selectors';
 import { Observable, take } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -205,80 +204,41 @@ export class ProfileComponent {
   user$: Observable<any>;
   token$: Observable<string | null>;
   dataForm: FormGroup;
-  userForm: any;
 
   constructor(private store: Store, private router: Router, private fb: FormBuilder) {
-    this.user$ = this.store.select(selectUserAuth);
-    this.token$ = this.store.select(selectToken);
-    this.dataForm = this.fb.group({
-        fullName: ['', Validators.required],
-        oldPassword: ['', [Validators.required, Validators.minLength(6)]],
-        newPassword: ['', Validators.required],
-        location: ['', Validators.required],
-        phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-    });
-  }
 
-  ngOnInit(): void {
-    // Dohvatanje korisnika prilikom učitavanja
-    this.token$.pipe(take(1)).subscribe(token => {
-      if (token) {
-        this.user$.pipe(take(1)).subscribe(user => {
-          if (user && user.id) {
-            console.log(user);
-            this.store.dispatch(loadUser({ userId: user.id }));
-          }
-        });
-      }
+    this.user$ = this.store.select(selectUser);
+    this.token$ = this.store.select(selectToken);
+
+    this.dataForm = this.fb.group({
+      fullName: ['', Validators.required],
+      oldPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', Validators.required],
+      location: ['', Validators.required],
+      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
     });
-  
-    // Ažuriranje forme kada se korisnik promeni (nakon uspešnog update-a)
-    this.store.select(selectUser).subscribe(user => {
-      if (user) {
-        console.log(user);
-        this.dataForm.patchValue({
-          fullName: user.fullName || '',
-          location: user.location || '',
-          phoneNumber: user.phoneNumber || ''
-        });
-      }
-    });
+
   }
-  
 
   updateData() {
-    this.user$.pipe(take(1)).subscribe(user => { 
-      if (user) {
-        console.log("USO");
-        const updatedData = this.dataForm.value;
-  
-        // Ukloni polja koja su prazna
-        Object.keys(updatedData).forEach(key => {
-          if (!updatedData[key]) {
-            delete updatedData[key];
-          }
-        });
-  
-        if (!updatedData.newPassword) {
-          delete updatedData.oldPassword;
-        }
-  
-        // Dispečujemo update akciju
-        this.store.dispatch(updateUser({ userId: user.id, updatedData }));
-  
-        // Nakon uspešnog update-a, ponovo učitaj korisnika
-        this.store.select(selectUser).pipe(take(1)).subscribe(updatedUser => {
-          if (updatedUser) {
-            this.dataForm.patchValue({
-              fullName: updatedUser.fullName || '',
-              location: updatedUser.location || '',
-              phoneNumber: updatedUser.phoneNumber || ''
-            });
-          }
-        });
+    this.user$.pipe(take(1)).subscribe(user => {
+      if (!user) return;
+
+      const updatePayload: any = {
+        userId: user.id, // Pretpostavljam da korisnik ima `id` polje
+        fullName: this.dataForm.value.fullName,
+        location: this.dataForm.value.location,
+        phoneNumber: this.dataForm.value.phoneNumber
+      };
+
+      // Ako je uneta nova lozinka, dodati je u payload
+      if (this.dataForm.value.oldPassword && this.dataForm.value.newPassword) {
+        updatePayload.oldPassword = this.dataForm.value.oldPassword;
+        updatePayload.newPassword = this.dataForm.value.newPassword;
       }
+
+      this.store.dispatch(updateUser({ userId: user.id, updatedData: updatePayload }));
     });
   }
-  
-  
 }
+
