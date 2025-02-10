@@ -23,8 +23,8 @@ export class UserEffects {
   updateUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(updateUser),
-      mergeMap(({ userId, updatedData }) =>
-        this.userService.updateUser(userId, updatedData).pipe(
+      mergeMap(action =>
+        this.userService.updateUser(action.userId, action.updatedData).pipe(
           map((user) => updateUserSuccess({ user })), 
           catchError((error) => of(updateUserFailure({ error: error.message }))) 
         )

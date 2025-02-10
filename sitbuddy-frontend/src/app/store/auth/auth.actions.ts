@@ -25,7 +25,7 @@ export const register = createAction(
     password: string; 
     location: string; 
     phoneNumber: string; 
-    userType: 'parent' | 'sitter'; // Umesto `any`, koristi konkretne vrednosti
+    userType: 'parent' | 'sitter'; 
   }>()
 );
 

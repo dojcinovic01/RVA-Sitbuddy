@@ -27,18 +27,16 @@ export class UserService {
   let headers = new HttpHeaders();
   headers = headers.set('Authorization', `Bearer ${token}`);
 
-  console.log('Headers nakon setovanja:', headers.get('Authorization'));
+  //console.log('Headers nakon setovanja:', headers.get('Authorization'));
 
   return this.http.get<any>("http://localhost:3000/auth/profile", { headers }).pipe(
-    tap(response => console.log('Trenutni korisnik:', response)),
+   // tap(response => console.log('Trenutni korisnik:', response)),
     catchError(error => {
       console.error('Greška prilikom preuzimanja korisnika:', error);
       return throwError(() => error);
     })
   );
 }
-
-  
 
   // Ažuriranje korisnika
   updateUser(userId: string, userData: Partial<any>): Observable<any> {
@@ -47,4 +45,14 @@ export class UserService {
     
     return this.http.patch<any>(`${this.apiUrl}/${userId}`, userData, { headers });
   }
+
+  // Dodaj ovu metodu za upload profilne slike
+  uploadProfilePicture(formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/upload-profile-picture`, formData);
+  }
+
+  uploadCriminalRecord(formData: FormData) {
+    return this.http.post(`${this.apiUrl}/upload-criminal-record`, formData);
+  }
+  
 }

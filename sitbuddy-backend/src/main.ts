@@ -14,10 +14,21 @@ import 'reflect-metadata';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
- 
-  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
-    prefix: '/uploads/',
+  const uploadsPath = 'D:/VI semestar/RVA/uploads/profile-pictures';
+
+  app.useStaticAssets(uploadsPath, {
+    prefix: '/uploads/profile-pictures',
   });
+  
+  console.log('Serving static files from:', uploadsPath);
+
+  const criminalRecordsPath = 'D:/VI semestar/RVA/uploads/criminal-records';
+
+  app.useStaticAssets(criminalRecordsPath, {
+    prefix: '/uploads/criminal-records',
+  });
+  console.log('Serving criminal records from:', criminalRecordsPath);
+
 
   app.enableCors(); // Omogućavamo CORS
   app.useGlobalPipes(new ValidationPipe()); 

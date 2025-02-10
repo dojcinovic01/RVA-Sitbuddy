@@ -5,7 +5,7 @@ import { login, loginSuccess, loginFailure, logout, register, registerSuccess, r
 import { mergeMap, map, catchError, tap, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
-import { loadUserSuccess } from '../user/user.actions';
+import { loadUserFailure, loadUserSuccess } from '../user/user.actions';
 import { UserService } from '../../core/services/user.service';
 
 @Injectable()
@@ -38,11 +38,11 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(loginSuccess),
       switchMap(() =>
-        this.userService.getCurrentUser().pipe( // Poziva /auth/profile i čeka odgovor
-          map(user => loadUserSuccess({ user })), // Prosleđuje dobijene podatke u store
+        this.userService.getCurrentUser().pipe( 
+          map(user => loadUserSuccess({ user })), 
           catchError(error => {
             console.error("Greška pri učitavanju korisnika:", error);
-            return of({ type: 'LOAD_USER_FAILURE' }); // Izbegavanje rušenja aplikacije
+            return of(loadUserFailure({error:error.message})); 
           })
         )
       )
@@ -50,8 +50,7 @@ export class AuthEffects {
   );
   
 
-  redirectAfterLogin$ = createEffect(
-    () =>
+  redirectAfterLogin$ = createEffect(() =>
       this.actions$.pipe(
         ofType(loginSuccess),
         tap(() => {
@@ -69,30 +68,29 @@ export class AuthEffects {
         if (token) {
           return loginSuccess({ token });
         } else {
-          return { type: 'NO_ACTION' }; // Ako nema podataka, ne radimo ništa
+          return { type: 'NO_ACTION' }; 
         }
       })
     )
   );
 
 
-  logout$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(logout),
-        tap(() => {
-          localStorage.removeItem('user');
-          localStorage.removeItem('token');
-        })
-      ),
+  logout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(logout),
+      tap(() => {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      })
+    ),
     { dispatch: false }
   );
 
   register$ = createEffect(() =>
     this.actions$.pipe(
       ofType(register),
-      mergeMap(({ fullName, email, password, location, phoneNumber, userType }) =>
-        this.authService.register(fullName, email, password, location, phoneNumber, userType).pipe(
+      mergeMap(action =>
+        this.authService.register(action.fullName, action.email, action.password, action.location, action.phoneNumber,action.userType).pipe(
           map(() => {
             alert('Registracija uspešna! Preusmeravanje na login stranicu...');
             setTimeout(() => {
