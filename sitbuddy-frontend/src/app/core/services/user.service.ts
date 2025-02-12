@@ -38,7 +38,7 @@ export class UserService {
   );
 }
 
-  // Ažuriranje korisnika
+  
   updateUser(userId: string, userData: Partial<any>): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : undefined;
@@ -46,7 +46,7 @@ export class UserService {
     return this.http.patch<any>(`${this.apiUrl}/${userId}`, userData, { headers });
   }
 
-  // Dodaj ovu metodu za upload profilne slike
+  
   uploadProfilePicture(formData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/upload-profile-picture`, formData);
   }
@@ -54,5 +54,13 @@ export class UserService {
   uploadCriminalRecord(formData: FormData) {
     return this.http.post(`${this.apiUrl}/upload-criminal-record`, formData);
   }
-  
+ 
+  deleteUser(userId:string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${userId}`).pipe(
+       catchError(error => {
+         console.error('Greška prilikom brisanja korisnika:', error);
+         return throwError(() => error);
+       })
+    );
+  }
 }

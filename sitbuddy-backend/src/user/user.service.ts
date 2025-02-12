@@ -78,11 +78,12 @@ export class UserService {
   }
   
 
-  async delete(id: number): Promise<string> {
+  async delete(id: number): Promise<{ message: string }> {
     const user = await this.findById(id);
-    this.userRepository.remove(user);
-    return `Korisnik sa id ${id} je uspešno obrisan.`;
-  }
+    await this.userRepository.remove(user);
+    return { message: `Korisnik sa id ${id} je uspešno obrisan.` };
+}
+
 
   async updateProfilePicture(userId: number, filename: string): Promise<User> {
     const user = await this.findById(userId);

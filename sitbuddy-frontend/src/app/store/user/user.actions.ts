@@ -7,3 +7,7 @@ export const loadUserFailure = createAction('[User] Load User Failure', props<{ 
 export const updateUser = createAction('[User] Update User', props<{ userId: string; updatedData: any }>());
 export const updateUserSuccess = createAction('[User] Update User Success', props<{ user: any }>());
 export const updateUserFailure = createAction('[User] Update User Failure', props<{ error: string }>());
+
+export const deleteUser = createAction('[User] Delete User', props<{userId:string}>());
+export const deleteUserSuccess = createAction('[User] Delete User Success');
+export const deleteUserFailure = createAction('[User] Delete User Failure', props<{error:string}>());

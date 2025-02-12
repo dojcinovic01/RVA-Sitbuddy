@@ -151,6 +151,10 @@ import { Router } from '@angular/router';
         padding: 10px;
       }
     }
+    button:disabled {
+        background-color: #FF204E;
+        cursor: not-allowed;
+      }
 
     .login-link {
         font-family: 'Calibri', sans-serif;
