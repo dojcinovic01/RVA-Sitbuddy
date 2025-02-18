@@ -1,0 +1,90 @@
+<app-navbar></app-navbar>
+  <div class="profile-container">
+    <div class="profile-content">
+      <div class="images-container">
+        <div class="avatar" (click)="openFileInput('profilePicture')">
+          <img 
+            *ngIf="(user$ | async)?.profilePicture" 
+            [src]="imageUrl +'/profile-pictures/' + (user$ | async)?.profilePicture"  
+            alt="Profilna slika" 
+          />
+          <div *ngIf="!(user$ | async)?.profilePicture" class="default-avatar">
+              <mat-icon>camera_enhance</mat-icon>
+          </div>
+        </div>
+        
+        <div class="criminal-proof" (click)="OpenCriminalProof()">
+          <div *ngIf="(user$ | async)?.criminalRecordProof">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          
+          <div *ngIf="!(user$ | async)?.criminalRecordProof" class="default-proof">
+            <mat-icon>error</mat-icon>
+          </div>
+        </div>
+      </div>
+    
+
+      <form [formGroup]="dataForm" >
+          <div class="input-group">
+            <label for="fullName">Ime i prezime</label>
+            <input id="fullName" formControlName="fullName" type="text" placeholder="{{(user$ | async)?.fullName}}" />
+          </div>
+
+          <div class="input-group">
+            <label for="oldPassword">Trenutna lozinka</label>
+            <input id="oldPassword" formControlName="oldPassword" type="password" placeholder="Obavezno, ukoliko postavljate novu" />
+          </div>
+
+          <div class="input-group">
+            <label for="newPassword">Nova lozinka</label>
+            <input id="newPassword" formControlName="newPassword" type="password" placeholder="Nova lozinka" />
+          </div>
+
+          <div class="input-group">
+            <label for="location">Lokacija</label>
+            <input id="location" formControlName="location" type="text" placeholder="{{(user$ | async)?.location}}"/>
+          </div>
+
+          <div class="input-group">
+            <label for="phoneNumber">Broj telefona</label>
+            <input id="phoneNumber" formControlName="phoneNumber" type="tel" placeholder="{{(user$ | async)?.phoneNumber}}" />
+          </div>
+
+          <div class="update-elements">
+            <div class="update-icon"  (click)="updateData()">
+              <mat-icon>update</mat-icon>
+              <p class="azuriraj-text">Ažuriraj podatke</p>
+            </div>
+
+            <div class="update-criminal-image" (click)="openFileInput('criminalRecordProof')">
+              <mat-icon>image_search</mat-icon>
+              <p class="azuriraj-neosudjivanost">Dodaj potvrdu o neosudjivanosti</p>
+            </div>
+
+            <div class="delete-profile" (click)="deleteProfile()">
+            <mat-icon>delete</mat-icon>
+              <p class="obrisi-nalog">Obriši nalog</p>
+            </div>
+            
+
+          </div>
+        <!-- Dodaj ovo u template -->
+          <input 
+            type="file" 
+            id="profilePictureInput" 
+            style="display: none;" 
+            (change)="onFileSelected($event, 'profilePicture')" 
+            accept="image/*" 
+          />
+          <input 
+            type="file" 
+            id="criminalRecordProofInput" 
+            style="display: none;" 
+            (change)="onFileSelected($event, 'criminalRecordProof')" 
+            accept="image/*" 
+          />
+
+        </form>
+    </div>  
+  </div>

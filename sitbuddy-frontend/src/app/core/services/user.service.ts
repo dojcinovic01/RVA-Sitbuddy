@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
+import { environment } from '../../../environments/environments';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://localhost:3000/users'; // Prilagodi prema backendu
+  private apiUrl = `${environment.apiUrl}`; 
 
   constructor(private http: HttpClient) {}
 
   // Dobavljanje podataka korisnika po ID-ju
   getUser(userId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${userId}`).pipe(
+    return this.http.get<any>(`${this.apiUrl}/users/${userId}`).pipe(
       tap(response => console.log('Dobavljeni korisnik:', response))
     );
   }
@@ -28,8 +29,9 @@ export class UserService {
   headers = headers.set('Authorization', `Bearer ${token}`);
 
   //console.log('Headers nakon setovanja:', headers.get('Authorization'));
+  
 
-  return this.http.get<any>("http://localhost:3000/auth/profile", { headers }).pipe(
+  return this.http.get<any>(`${this.apiUrl}/auth/profile`, { headers }).pipe(
    // tap(response => console.log('Trenutni korisnik:', response)),
     catchError(error => {
       console.error('Greška prilikom preuzimanja korisnika:', error);
@@ -43,20 +45,20 @@ export class UserService {
     const token = localStorage.getItem('token');
     const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : undefined;
     
-    return this.http.patch<any>(`${this.apiUrl}/${userId}`, userData, { headers });
+    return this.http.patch<any>(`${this.apiUrl}/users/${userId}`, userData, { headers });
   }
 
   
   uploadProfilePicture(formData: FormData): Observable<any> {
-    return this.http.post(`${this.apiUrl}/upload-profile-picture`, formData);
+    return this.http.post(`${this.apiUrl}/users/upload-profile-picture`, formData);
   }
 
   uploadCriminalRecord(formData: FormData) {
-    return this.http.post(`${this.apiUrl}/upload-criminal-record`, formData);
+    return this.http.post(`${this.apiUrl}/users/upload-criminal-record`, formData);
   }
  
   deleteUser(userId:string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${userId}`).pipe(
+    return this.http.delete(`${this.apiUrl}/users/${userId}`).pipe(
        catchError(error => {
          console.error('Greška prilikom brisanja korisnika:', error);
          return throwError(() => error);

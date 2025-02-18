@@ -63,7 +63,6 @@ import { selectUser } from '../../../store/user/user.selectors';
       }
 
       h2 {
-        font-family: 'Calibri', sans-serif;
         margin-bottom: 20px;
         font-size: 24px;
         color: rgba(0, 0, 0, 0.8);
@@ -76,7 +75,6 @@ import { selectUser } from '../../../store/user/user.selectors';
       }
 
       label {
-        font-family: 'Calibri', sans-serif;
         display: block;
         font-size: 20px;
         margin-bottom: 5px;
@@ -84,7 +82,6 @@ import { selectUser } from '../../../store/user/user.selectors';
       }
 
       input {
-        font-family: 'Calibri', sans-serif;
         width: 94%;
         padding: 10px;
         font-size: 16px;
@@ -98,7 +95,6 @@ import { selectUser } from '../../../store/user/user.selectors';
       }
 
       button {
-        font-family: 'Calibri', sans-serif; 
         width: 100%;
         padding: 10px;
         background-color:#FF204E;
@@ -121,14 +117,12 @@ import { selectUser } from '../../../store/user/user.selectors';
       }
 
       .register-link {
-        font-family: 'Calibri', sans-serif;
         margin-top: 15px;
         font-size: 14px;
         color: black;
       }
 
       .register-link a {
-        font-family: 'Calibri', sans-serif;
         color: #FF204E;
         cursor: pointer;
         text-decoration: underline;

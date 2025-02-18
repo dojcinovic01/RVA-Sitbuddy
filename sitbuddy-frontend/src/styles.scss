@@ -3,3 +3,9 @@ body {
     margin: 0; /* Uklanja default margin */
     display: block;
 }
+
+$default-font: 'Calibri', sans-serif;
+
+* {
+  font-family: $default-font;
+}
