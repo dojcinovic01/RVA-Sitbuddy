@@ -39,7 +39,10 @@ export class AuthEffects {
       ofType(loginSuccess),
       switchMap(() =>
         this.userService.getCurrentUser().pipe( 
-          map(user => loadUserSuccess({ user })), 
+          map(user => {
+            // this.router.navigate(['/home']);
+            return loadUserSuccess({ user })
+          }), 
           catchError(error => {
             console.error("Greška pri učitavanju korisnika:", error);
             return of(loadUserFailure({error:error.message})); 
@@ -49,16 +52,6 @@ export class AuthEffects {
     )
   );
   
-
-  redirectAfterLogin$ = createEffect(() =>
-      this.actions$.pipe(
-        ofType(loginSuccess),
-        tap(() => {
-          this.router.navigate(['/home']);
-        })
-      ),
-    { dispatch: false }
-  );
 
   checkAutStatus$ = createEffect(() =>
     this.actions$.pipe(

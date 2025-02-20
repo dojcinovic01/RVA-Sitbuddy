@@ -1,14 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Observable, take } from 'rxjs';
 import { NavbarComponent } from "../navbar/navbar.component";
 import { MatIconModule } from '@angular/material/icon';
-import { selectToken} from '../../store/auth/auth.selectors';
+import { selectToken } from '../../store/auth/auth.selectors';
 import { selectUser } from '../../store/user/user.selectors';
-import { Observable, take } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { deleteUser, loadUser, updateUser } from '../../store/user/user.actions';
 import { UserService } from '../../core/services/user.service';
 import { environment } from '../../../environments/environments';
@@ -18,23 +17,42 @@ import { environment } from '../../../environments/environments';
   imports: [CommonModule, NavbarComponent, MatIconModule, ReactiveFormsModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
-  
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
   user$: Observable<any>;
   token$: Observable<string | null>;
   dataForm: FormGroup;
   imageUrl = environment.imageUrl;
 
-  constructor(private store: Store, private router: Router, private fb: FormBuilder, private userService: UserService) {
+  constructor(
+    private store: Store,
+    private router: Router,
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private userService: UserService
+  ) {
     this.user$ = this.store.select(selectUser);
     this.token$ = this.store.select(selectToken);
     this.dataForm = this.fb.group({
       fullName: ['', Validators.required],
       oldPassword: ['', [Validators.required, Validators.minLength(6)]],
-      newPassword: ['', Validators.required, Validators.minLength(6)],
+      newPassword: ['', [Validators.required, Validators.minLength(6)]],
       location: ['', Validators.required],
       phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+    });
+  }
+
+  ngOnInit(): void {
+    this.token$.pipe(take(1)).subscribe(token => {
+      console.log('Token:', token);
+      if (!token) this.router.navigate(['/login']);
+    });
+
+    this.route.paramMap.subscribe(params => {
+      const userId = params.get('userId');
+      if (userId) {
+        this.store.dispatch(loadUser({ userId }));
+      }
     });
   }
 
@@ -96,7 +114,6 @@ export class ProfileComponent {
     });
   }
   
-
   deleteProfile() {
     if (confirm("Da li ste sigurni da želite da obrišete svoj nalog? Ova akcija je nepovratna!")) {
       this.user$.pipe(take(1)).subscribe(user => {
@@ -106,4 +123,3 @@ export class ProfileComponent {
     }
   }
 }
-

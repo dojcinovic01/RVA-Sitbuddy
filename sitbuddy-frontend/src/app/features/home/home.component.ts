@@ -55,11 +55,5 @@ import { selectToken } from '../../store/auth/auth.selectors';
 export class HomeComponent {
   constructor(private store: Store, private router: Router) {}
 
-  ngOnInit(): void {
-      this.store.select(selectToken).subscribe(token => {
-        if (!token) {
-          this.router.navigate(['/login']);
-        }
-      });
-  }
+ 
 }

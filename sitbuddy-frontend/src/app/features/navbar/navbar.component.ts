@@ -6,6 +6,7 @@ import { logout } from '../../store/auth/auth.actions';
 import { selectToken } from '../../store/auth/auth.selectors';
 import { Observable } from 'rxjs';
 import {MatIconModule} from '@angular/material/icon';
+import { selectUser } from '../../store/user/user.selectors';
 
 @Component({
   selector: 'app-navbar',
@@ -15,8 +16,17 @@ import {MatIconModule} from '@angular/material/icon';
     <nav class="navbar">
       <div class="logo">Sitbuddy</div>
       <ul class="nav-links">
-        <li><a routerLink="/home" routerLinkActive="active"><mat-icon>home</mat-icon></a></li>
-        <li><a routerLink="/profile" routerLinkActive="active"><mat-icon>person</mat-icon></a></li>
+        <li>
+          <a routerLink="/home" routerLinkActive="active">
+            <mat-icon>home</mat-icon>
+          </a>
+        </li>
+        <li *ngIf="(user$ | async) as user">
+          <a [routerLink]="['/profile', user.id]" routerLinkActive="active">
+            <mat-icon>person</mat-icon>
+          </a>
+        </li>
+
         <li *ngIf="(token$ | async) as token">
           <mat-icon (click)="onLogout()">exit_to_app</mat-icon>
         </li>
@@ -61,9 +71,11 @@ import {MatIconModule} from '@angular/material/icon';
 })
 export class NavbarComponent {
   token$: Observable<string | null>;
+  user$: Observable<any>;
 
   constructor(private store: Store, private router: Router) {
     this.token$ = this.store.select(selectToken);
+    this.user$ = this.store.select(selectUser);
   }
 
   onLogout() {
