@@ -77,6 +77,11 @@ export class UserController {
     return this.userService.updateCriminalRecord(+userId, file.filename);
   }
 
+  @Delete('criminal-record-proof/:id')
+  async deleteCriminalProof(@Param('id') id:number): Promise<User> {
+    return this.userService.deleteCriminalProof(id);
+  }
+
   @Get('averageRating/:id')
   async getAverageRating(@Param('id') id: number): Promise<number> {
     return this.userService.calculateAverageRating(id);

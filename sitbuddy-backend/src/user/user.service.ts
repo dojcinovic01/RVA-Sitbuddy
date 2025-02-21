@@ -97,6 +97,13 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
+  async deleteCriminalProof(userId: number): Promise<User> {
+    console.log('Pokušaj brisanja slike potvrde:', userId);
+    const user = await this.findById(userId);
+    user.criminalRecordProof = null;
+    return this.userRepository.save(user);
+  }
+
   async calculateAverageRating(userId: number): Promise<number> {
     const reviews = await this.reviewService.findByReviewToId(userId);
     

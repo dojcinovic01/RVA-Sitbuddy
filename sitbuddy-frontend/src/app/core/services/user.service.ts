@@ -65,4 +65,13 @@ export class UserService {
        })
     );
   }
+
+  deleteCriminalProof(userId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/users/criminal-record-proof/${userId}`).pipe(
+      catchError(error => {
+        console.error('Greška prilikom brisanja potvrde o neosuđivanosti:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 }

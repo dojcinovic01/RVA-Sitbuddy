@@ -4,21 +4,21 @@
       <div class="images-container">
         <div class="avatar" (click)="openFileInput('profilePicture')">
           <img 
-            *ngIf="(user$ | async)?.profilePicture" 
-            [src]="imageUrl +'/profile-pictures/' + (user$ | async)?.profilePicture"  
+            *ngIf="(profileUser$ | async)?.profilePicture" 
+            [src]="imageUrl +'/profile-pictures/' + (profileUser$ | async)?.profilePicture"  
             alt="Profilna slika" 
           />
-          <div *ngIf="!(user$ | async)?.profilePicture" class="default-avatar">
+          <div *ngIf="!(profileUser$ | async)?.profilePicture" class="default-avatar">
               <mat-icon>camera_enhance</mat-icon>
           </div>
         </div>
         
         <div class="criminal-proof" (click)="OpenCriminalProof()">
-          <div *ngIf="(user$ | async)?.criminalRecordProof">
+          <div *ngIf="(profileUser$ | async)?.criminalRecordProof">
             <mat-icon>check_circle</mat-icon>
           </div>
           
-          <div *ngIf="!(user$ | async)?.criminalRecordProof" class="default-proof">
+          <div *ngIf="!(profileUser$ | async)?.criminalRecordProof" class="default-proof">
             <mat-icon>error</mat-icon>
           </div>
         </div>
@@ -28,30 +28,30 @@
       <form [formGroup]="dataForm" >
           <div class="input-group">
             <label for="fullName">Ime i prezime</label>
-            <input id="fullName" formControlName="fullName" type="text" placeholder="{{(user$ | async)?.fullName}}" />
+            <input id="fullName" formControlName="fullName" type="text" placeholder="{{(profileUser$ | async)?.fullName}}"  />
           </div>
 
-          <div class="input-group">
+          <div *ngIf="isCurrentUser$ | async" class="input-group">
             <label for="oldPassword">Trenutna lozinka</label>
             <input id="oldPassword" formControlName="oldPassword" type="password" placeholder="Obavezno, ukoliko postavljate novu" />
           </div>
 
-          <div class="input-group">
+          <div *ngIf="isCurrentUser$ | async" class="input-group">
             <label for="newPassword">Nova lozinka</label>
             <input id="newPassword" formControlName="newPassword" type="password" placeholder="Nova lozinka" />
           </div>
 
           <div class="input-group">
             <label for="location">Lokacija</label>
-            <input id="location" formControlName="location" type="text" placeholder="{{(user$ | async)?.location}}"/>
+            <input id="location" formControlName="location" type="text" placeholder="{{(profileUser$ | async)?.location}}"/>
           </div>
 
           <div class="input-group">
             <label for="phoneNumber">Broj telefona</label>
-            <input id="phoneNumber" formControlName="phoneNumber" type="tel" placeholder="{{(user$ | async)?.phoneNumber}}" />
+            <input id="phoneNumber" formControlName="phoneNumber" type="tel" placeholder="{{(profileUser$ | async)?.phoneNumber}}" />
           </div>
 
-          <div class="update-elements">
+          <div *ngIf="isCurrentUser$ | async" class="update-elements">
             <div class="update-icon"  (click)="updateData()">
               <mat-icon>update</mat-icon>
               <p class="azuriraj-text">Ažuriraj podatke</p>
@@ -60,6 +60,11 @@
             <div class="update-criminal-image" (click)="openFileInput('criminalRecordProof')">
               <mat-icon>image_search</mat-icon>
               <p class="azuriraj-neosudjivanost">Dodaj potvrdu o neosudjivanosti</p>
+            </div>
+
+            <div class="delete-criminal-image" (click)="deleteCriminalProof()">
+              <mat-icon>broken_image</mat-icon>
+              <p class="ukloni-neosudjivanost">Ukloni potvrdu o neosudjivanosti</p>
             </div>
 
             <div class="delete-profile" (click)="deleteProfile()">
