@@ -17,6 +17,17 @@ export class AdvertismentController {
         return this.advertismentService.findAll();
     }
 
+    @Get(":id")
+    async getAdvertismentById(@Param("id") id: number){
+        return this.advertismentService.findById(id);
+    }
+
+    @Get("user/:id")
+    async getAdvertismentByUserId(@Param("id") id: number){
+        console.log("GETTT",id);
+        return this.advertismentService.findByUserId(id);
+    }
+
     @Patch(":id")
     async updateAdvertisment(@Param("id") id: number, @Body() updateAdvertismentDto: UpdateAdvertismentDto){
         return this.advertismentService.update(id, updateAdvertismentDto);

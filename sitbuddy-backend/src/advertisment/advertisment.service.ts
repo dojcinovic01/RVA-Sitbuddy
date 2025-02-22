@@ -34,6 +34,13 @@ export class AdvertismentService {
         return advertisment;
     }
 
+
+    async findByUserId(id: number): Promise<Advertisment|null> {
+        const user = await this.userService.findById(id);
+        return this.advertismentRepository.findOne({where:{adFrom: user}});
+    }
+
+
     async update(id: number, advertismentDto: UpdateAdvertismentDto): Promise<Advertisment> {
         const { title, description} = advertismentDto;
         
@@ -44,11 +51,11 @@ export class AdvertismentService {
         return this.advertismentRepository.save(ad);
     }
 
-    async delete(id: number): Promise<string> {
+    async delete(id: number): Promise<{message:string}> {
         const ad= await this.findById(id);
     
         await this.advertismentRepository.delete(id);
-        return `Advertisment with id: ${id} deleted successfully.`;
+        return { message: `Advertisment with id: ${id} deleted successfully.` };
     }
 
 }

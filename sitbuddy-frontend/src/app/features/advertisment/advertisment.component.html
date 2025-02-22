@@ -1,0 +1,56 @@
+<!-- Ako korisnik ima oglas, prikazuje se -->
+<div *ngIf="userAdvertisment$ | async as userAdvertisment; else addAdvertForm" class="user-advertisment">
+    <div *ngIf="!isEditing">
+      <h2>{{ userAdvertisment.title }}</h2>
+      <p>{{ userAdvertisment.description }}</p>
+    </div>
+  
+    <form *ngIf="isEditing" (ngSubmit)="saveChanges()">
+      <div class="input-group">
+        <label for="edit-title">Naslov</label>
+        <input id="edit-title" [(ngModel)]="editedAdvertisment.title" name="edit-title" required>
+      </div>
+  
+      <div class="input-group">
+        <label for="edit-description">Opis</label>
+        <input id="edit-description" [(ngModel)]="editedAdvertisment.description" name="edit-description" required>
+      </div>
+  
+      <button type="submit">Sačuvaj</button>
+      <button type="button" (click)="isEditing = false">Otkaži</button>
+    </form>
+  
+    <div class="update-elements">
+      <div class="update-icon" (click)="toggleEditMode(userAdvertisment)">
+        <mat-icon>edit</mat-icon>
+        <span *ngIf="!isEditing">Izmeni</span>
+        <span *ngIf="isEditing">Otkaži</span>
+      </div>
+  
+      <div class="delete-icon" (click)="deleteAdvertisment(userAdvertisment.id)">
+        <mat-icon>delete</mat-icon>
+        <span>Obriši</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Prikaz forme za dodavanje ako korisnik nema oglas -->
+  <ng-template #addAdvertForm>
+    <div class="user-advertisment">
+      <h2>Dodaj novi oglas</h2>
+      <form (ngSubmit)="createAdvertisment()">
+        <div class="input-group">
+          <label for="new-title">Naslov</label>
+          <input id="new-title" [(ngModel)]="newAdvertisment.title" name="new-title" required>
+        </div>
+  
+        <div class="input-group">
+          <label for="new-description">Opis</label>
+          <input id="new-description" [(ngModel)]="newAdvertisment.description" name="new-description" required>
+        </div>
+  
+        <button type="submit">Dodaj oglas</button>
+      </form>
+    </div>
+  </ng-template>
+  

@@ -1,0 +1,138 @@
+.user-advertisment {
+    width: 100%;
+    max-width: 400px;
+    background: linear-gradient(135deg, #FF204E, #00224D);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+  }
+  
+  h2 {
+    color: rgb(0, 0, 0);
+    margin-bottom: 10px;
+  }
+  
+  p {
+    color: #000000;
+    font-size: 16px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-top: 15px;
+    width: 100%;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 16px;
+  
+    label {
+      font-weight: bold;
+      color: rgb(0, 0, 0);
+    }
+  
+    input {
+      width: 95%;
+      padding: 10px;
+      border: 1px solid #FF204E;
+      border-radius: 5px;
+      font-size: 16px;
+      background: rgb(233, 25, 88);
+      color: rgb(0, 0, 0);
+      text-align: center;
+      transition: border-color 0.3s, box-shadow 0.3s;
+  
+      &::placeholder {
+        color: rgb(0, 0, 0);
+        font-style: italic;
+      }
+  
+      &:focus {
+        border-color: #FF204E;
+        outline: none;
+        box-shadow: 0 0 5px rgba(255, 32, 78, 0.5);
+      }
+    }
+  }
+  
+  button {
+    background-color: #FF204E;
+    color: rgb(0, 0, 0);
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  
+    &:hover {
+      background-color: #D91B3A;
+    }
+  
+    &:nth-child(2) {
+      background-color: #888;
+      &:hover {
+        background-color: #666;
+      }
+    }
+  }
+  
+  .update-elements {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+  
+    .update-icon, .delete-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      gap: 3px;
+      transition: transform 0.2s, color 0.3s;
+  
+      mat-icon {
+        font-size: 24px;
+        color: rgb(0, 0, 0);
+      }
+  
+      &:hover mat-icon {
+        transform: scale(1.1);
+      }
+    }
+  
+    .update-icon:hover mat-icon {
+      color: #FF204E;
+    }
+  
+    .delete-icon:hover mat-icon {
+      color: #FF204E;
+    }
+  }
+  
+  /* Responsivnost */
+  @media (max-width: 768px) {
+    .user-advertisment {
+      width: 90%;
+    }
+  }
+  
+  @media (max-width: 520px) {
+    .user-advertisment {
+      width: 100%;
+      padding: 15px;
+    }
+  }
+  

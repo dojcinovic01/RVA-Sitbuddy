@@ -5,18 +5,16 @@ import { logout } from '../../store/auth/auth.actions';
 import { Router } from '@angular/router';
 import { NavbarComponent } from "../navbar/navbar.component";
 import { selectToken } from '../../store/auth/auth.selectors';
+import { AdvertismentComponent } from "../advertisment/advertisment.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, NavbarComponent],
+  imports: [CommonModule, NavbarComponent, AdvertismentComponent],
   template: `
   <div class="home-container">
     <app-navbar></app-navbar>
-    <div class="homePage">
-      <h1>Welcome to Home Page!</h1>
-      <p>You are successfully logged in.</p>
-    </div>  
+    <app-advertisment></app-advertisment>
   </div>
   `,
   styles: [
