@@ -15,7 +15,10 @@ export const advertismentReducer = createReducer(
   on(AdvertismentActions.loadAdvertisments, (state) => ({ ...state, loading: true, error: null })),
   on(AdvertismentActions.loadAdvertismentsSuccess, (state, { advertisments }) => ({
     ...state,
-    advertisments,
+    advertisments: advertisments.map(ad => ({
+      ...ad,
+      adFrom: ad.adFrom || null // Osigurava da adFrom postoji
+    })),
     loading: false,
   })),
   on(AdvertismentActions.loadAdvertismentsFailure, (state, { error }) => ({ ...state, loading: false, error })),

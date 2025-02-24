@@ -1,0 +1,80 @@
+.advertisment-list {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+h2 {
+    color: black;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.advertisment {
+    background: linear-gradient(135deg, #FF204E, #00224D);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: rgb(0, 0, 0);
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.advertisment:hover {
+    transform: scale(1.02);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
+
+.user-info span {
+    font-size: 16px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+}
+
+h3 {
+    margin: 0;
+    font-size: 20px;
+    color: rgb(0, 0, 0);
+}
+
+p {
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    margin: 0;
+}
+
+/* Responsivnost */
+@media (max-width: 768px) {
+    .advertisment-list {
+        width: 90%;
+    }
+}
+
+@media (max-width: 520px) {
+    .advertisment {
+        padding: 15px;
+    }
+}

@@ -6,15 +6,17 @@ import { Router } from '@angular/router';
 import { NavbarComponent } from "../navbar/navbar.component";
 import { selectToken } from '../../store/auth/auth.selectors';
 import { AdvertismentComponent } from "../advertisment/advertisment.component";
+import { AdvertismentListComponent } from '../advertisment-list/advertisment-list.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, AdvertismentComponent],
+  imports: [CommonModule, NavbarComponent, AdvertismentComponent, AdvertismentListComponent],
   template: `
   <div class="home-container">
     <app-navbar></app-navbar>
     <app-advertisment></app-advertisment>
+    <app-advertisment-list></app-advertisment-list>
   </div>
   `,
   styles: [

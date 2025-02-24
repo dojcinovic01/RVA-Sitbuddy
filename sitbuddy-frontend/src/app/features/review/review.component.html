@@ -1,0 +1,21 @@
+<div class="review-container">
+    <h3>Recenzije</h3>
+  
+    <div class="review-form">
+      <textarea [(ngModel)]="newReview.comment" placeholder="Ostavite komentar..."></textarea>
+      <select [(ngModel)]="newReview.rating">
+        <option *ngFor="let r of [1, 2, 3, 4, 5]" [value]="r">{{ r }} ★</option>
+      </select>
+      <button (click)="submitReview()">Dodaj recenziju</button>
+    </div>
+  
+    <div class="review-list">
+      <div *ngFor="let review of reviews$ | async" class="review-card">
+        <p class="review-author">{{ review.reviewFrom.fullName }}</p>
+        <p class="review-rating">{{ review.rating }} ★</p>
+        <p class="review-comment">{{ review.comment }}</p>
+        <button class="delete-btn" (click)="deleteReview(review.id)">🗑️</button>
+      </div>
+    </div>
+  </div>
+  

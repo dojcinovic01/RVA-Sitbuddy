@@ -21,7 +21,7 @@ export class AdvertismentComponent implements OnInit {
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
 
-  newAdvertisment: Omit<Advertisment, 'id'> = { title: '', description: '', adFromId: 0 };
+  newAdvertisment: Omit<Advertisment, 'id'> = { title: '', description: '', adFrom: undefined };
   isEditing = false;
   editedAdvertisment: Partial<Advertisment> = {};
 
@@ -38,18 +38,25 @@ export class AdvertismentComponent implements OnInit {
     this.user$.subscribe(user => {
         if (user) {
             //console.log(user);
-            this.newAdvertisment.adFromId = user.id;
+            this.newAdvertisment.adFrom = user; // Dodeljujemo ceo objekat korisnika
             this.store.dispatch(AdvertismentActions.loadUserAdvertisment({ userId: user.id }));
         }
     });
   }
 
   createAdvertisment(): void {
-    if (this.newAdvertisment.title && this.newAdvertisment.description) {
-      this.store.dispatch(AdvertismentActions.createAdvertisment({ advertisment: this.newAdvertisment}));
-      this.newAdvertisment = { title: '', description: '', adFromId: 0 };
+    if (this.newAdvertisment.title && this.newAdvertisment.description && this.newAdvertisment.adFrom) {
+      const payload = {
+        title: this.newAdvertisment.title,
+        description: this.newAdvertisment.description,
+        adFromId: this.newAdvertisment.adFrom.id, 
+      };
+      
+      this.store.dispatch(AdvertismentActions.createAdvertisment({ advertisment: payload }));
+      this.newAdvertisment = { title: '', description: '', adFrom: undefined };
     }
   }
+  
 
   updateAdvertisment(advertisment: Advertisment): void {
     this.store.dispatch(AdvertismentActions.updateAdvertisment({ id: advertisment.id, advertisment }));

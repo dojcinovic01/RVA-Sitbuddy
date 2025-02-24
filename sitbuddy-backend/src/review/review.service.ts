@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable,NotFoundException  } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, forwardRef, Inject, Injectable,NotFoundException  } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Review } from './review.entity';
@@ -24,9 +24,20 @@ export class ReviewService {
         const reviewTo= await this.userService.findById(reviewToId);
 
         if (!reviewFrom || !reviewTo) {
-            throw new NotFoundException("One or both users not found.");
+            throw new NotFoundException("Korisnici nisu pronadjeni.");
+        }
+        if(reviewFrom.userType !== 'parent'){
+            throw new NotFoundException("Ocene moze davati jedino roditelj.");
         }
 
+        const existingReview = await this.reviewRepository.findOne({ 
+            where: { reviewFrom: { id: reviewFromId }, reviewTo: { id: reviewToId } } 
+        });
+        
+        if (existingReview) {
+            throw new BadRequestException("Već ste ostavili recenziju za ovog korisnika.");
+        }
+        
         const review = this.reviewRepository.create({comment, rating, reviewFrom, reviewTo});
         return this.reviewRepository.save(review);
     }
@@ -51,16 +62,33 @@ export class ReviewService {
         return this.reviewRepository.find({where: {reviewFrom: {id}}});
     }
 
-    async delete(id: number): Promise<void> {
-        await this.findById(id); 
-        await this.reviewRepository.delete(id); 
+    async findForUser(id: number): Promise<Review[]> {
+        return this.reviewRepository.find({where: {reviewTo: {id}}});
     }
 
-    async update(id: number, updateReviewDto : UpdateReviewDto): Promise<Review> {
+    async delete(id: number, userId: number): Promise<void> {
         const review = await this.findById(id);
-        const {comment} = updateReviewDto;
-        review.comment = comment;
+    
+        if (review.reviewFrom.id !== userId) {
+            throw new ForbiddenException("Nemate dozvolu da obrišete ovu recenziju.");
+        }
+    
+        await this.reviewRepository.delete(id);
+    }
+    
+
+    async update(id: number, updateReviewDto: UpdateReviewDto): Promise<Review> {
+        const review = await this.findById(id);
+    
+        if (updateReviewDto.comment) {
+            review.comment = updateReviewDto.comment;
+        }
+        if (updateReviewDto.rating) {
+            review.rating = updateReviewDto.rating;
+        }
+    
         return this.reviewRepository.save(review);
     }
+    
     
 }

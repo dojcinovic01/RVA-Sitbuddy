@@ -44,6 +44,13 @@ export class AdvertismentEffects {
     )
   );
 
+  createAdvertismentSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AdvertismentActions.createAdvertismentSuccess),
+      map(() => AdvertismentActions.loadAdvertisments()) // Učitavanje svih oglasa samo nakon uspešnog kreiranja
+    )
+  );
+
   updateAdvertisment$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AdvertismentActions.updateAdvertisment),
@@ -56,6 +63,13 @@ export class AdvertismentEffects {
     )
   );
 
+  updateAdvertismentSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AdvertismentActions.updateAdvertismentSuccess),
+      map(() => AdvertismentActions.loadAdvertisments())
+    )
+  );
+
   deleteAdvertisment$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AdvertismentActions.deleteAdvertisment),
@@ -65,6 +79,13 @@ export class AdvertismentEffects {
           catchError((error) => of(AdvertismentActions.deleteAdvertismentFailure({ error: error.message })))
         )
       )
+    )
+  );
+
+  deleteAdvertismentSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AdvertismentActions.deleteAdvertismentSuccess),
+      map(() => AdvertismentActions.loadAdvertisments())
     )
   );
 }

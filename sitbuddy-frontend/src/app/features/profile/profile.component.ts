@@ -12,10 +12,11 @@ import { deleteUser, loadUser, updateUser } from '../../store/user/user.actions'
 import { UserService } from '../../core/services/user.service';
 import { environment } from '../../../environments/environments';
 import { BehaviorSubject, map } from 'rxjs';
+import { ReviewComponent } from "../review/review.component";
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, NavbarComponent, MatIconModule, ReactiveFormsModule],
+  imports: [CommonModule, NavbarComponent, MatIconModule, ReactiveFormsModule, ReviewComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })

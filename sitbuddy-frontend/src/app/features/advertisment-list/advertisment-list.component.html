@@ -1,0 +1,13 @@
+<div class="advertisment-list">
+    <h2>Svi oglasi</h2>
+    <div *ngFor="let ad of advertisments$ | async" class="advertisment" (click)="ad.adFrom && ad.adFrom.id && navigateToProfile(ad.adFrom.id)">
+        <div class="user-info">
+            <img [src]="'http://localhost:3000/uploads/profile-pictures/' + ad.adFrom?.profilePicture" alt="Profile Picture" class="profile-pic">
+            <span>{{ ad.adFrom?.userType ==='parent' ? "Roditelj": "Sitter" }}</span>
+            <span>{{ ad.adFrom?.fullName }}</span>
+        </div>
+        <h3>{{ ad.title }}</h3>
+        <p>{{ ad.description }}</p>
+    </div>
+  </div>
+  

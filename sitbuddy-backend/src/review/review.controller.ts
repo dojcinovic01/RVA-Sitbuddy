@@ -17,9 +17,14 @@ export class ReviewController {
         return this.reviewService.findAll();
     }
 
+    @Get("user/:id")
+    async getReviewsForUser(@Param("id") id: number){
+        return this.reviewService.findForUser(id);
+    }
+
     @Delete(":id")
-    async deleteReview(@Param("id") id: number){
-        return this.reviewService.delete(id);
+    async deleteReview(@Param("id") id: number, @Body() userId: number){
+        return this.reviewService.delete(id, userId);
     }
     
     @Patch(":id")
