@@ -13,9 +13,10 @@ export class ReviewService {
   constructor(private http: HttpClient) {}
 
   // Kreiranje recenzije
-  createReview(review: Omit<Review, 'id'>): Observable<Review> {
+  createReview(review: { comment: string; rating: number; reviewFromId: number; reviewToId: number }): Observable<Review> {
+    console.log('Review sent to backend:', review);
     return this.http.post<Review>(`${this.apiUrl}/write`, review);
-  }
+}
 
   // Dohvatanje svih recenzija
   getAllReviews(): Observable<Review[]> {
@@ -28,12 +29,13 @@ export class ReviewService {
   }
 
   // Ažuriranje recenzije
-  updateReview(id: number, review: Partial<Review>): Observable<Review> {
-    return this.http.patch<Review>(`${this.apiUrl}/${id}`, review);
+  updateReview( review: { reviewId:number; comment: string; rating: number; }): Observable<Review> {
+    return this.http.patch<Review>(`${this.apiUrl}/${review.reviewId}`, review);
   }
 
   // Brisanje recenzije
   deleteReview(id: number, userId: number): Observable<void> {
-    return this.http.request<void>('delete', `${this.apiUrl}/${id}`, { body: { userId } });
+    return this.http.delete<void>(`${this.apiUrl}/${id}?userId=${userId}`);
   }
+
 }

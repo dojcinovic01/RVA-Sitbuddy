@@ -27,6 +27,7 @@ export class ProfileComponent implements OnInit {
   imageUrl = environment.imageUrl;
   profileUser$ = new BehaviorSubject<any>(null);
   isCurrentUser$: Observable<boolean> | undefined;
+  isReviewAllowed$:Observable<boolean> | undefined;
 
   constructor(
     private store: Store,
@@ -69,6 +70,18 @@ export class ProfileComponent implements OnInit {
     this.isCurrentUser$ = combineLatest([this.user$, this.profileUser$]).pipe(
       map(([currentUser, profileUser]) => currentUser?.id === profileUser?.id)
     );
+
+    this.isReviewAllowed$ = combineLatest([this.user$, this.profileUser$]).pipe(
+      map(([currentUser, profileUser]) => {
+        if (!currentUser || !profileUser) return false; // Ako nema korisnika, nema recenzije
+        return (
+          currentUser.id !== profileUser.id &&
+          currentUser.userType === 'parent' && 
+          profileUser.userType === 'sitter'
+        );
+      })
+    );
+    
   
     this.isCurrentUser$.subscribe(isCurrent => {
       if (isCurrent) {
@@ -79,8 +92,13 @@ export class ProfileComponent implements OnInit {
     });
 
     this.user$.subscribe(updatedUser => {
-      this.profileUser$.next(updatedUser);
+      this.isCurrentUser$?.pipe(take(1)).subscribe(isCurrent => {
+        if (isCurrent) {
+          this.profileUser$.next(updatedUser);
+        }
+      });
     });
+    
   }
   
   

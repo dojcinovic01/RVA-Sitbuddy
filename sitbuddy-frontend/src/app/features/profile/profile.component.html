@@ -1,5 +1,4 @@
 <app-navbar></app-navbar>
-<app-review></app-review>
   <div class="profile-container">
     <div class="profile-content">
       <div class="images-container">
@@ -94,3 +93,7 @@
         </form>
     </div>  
   </div>
+  <app-review 
+  *ngIf="isReviewAllowed$ | async" 
+  [reviewedUserId]="(profileUser$ | async)?.id">
+  </app-review>

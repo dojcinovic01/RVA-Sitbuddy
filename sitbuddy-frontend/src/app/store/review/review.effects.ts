@@ -23,12 +23,37 @@ export class ReviewEffects {
     addReview$ = createEffect(() =>
         this.actions$.pipe(
             ofType(ReviewActions.addReview),
-            mergeMap((action) =>
-                this.reviewService.createReview(action.review).pipe(
+            mergeMap(({ review }) =>
+                this.reviewService.createReview(review).pipe(
                     map((newReview) => ReviewActions.addReviewSuccess({ review: newReview })),
                     catchError((error) => of(ReviewActions.addReviewFailure({ error: error.message })))
                 )
             )
         )
     );
+    
+    updateReview$ = createEffect(() => 
+        this.actions$.pipe(
+            ofType(ReviewActions.updateReview),
+            mergeMap(({review}) =>
+                this.reviewService.updateReview(review).pipe(
+                    map((updatedReview) => ReviewActions.updateReviewSuccess({ review: updatedReview })),
+                    catchError((error) => of(ReviewActions.updateReviewFailure({ error: error.message })))
+                )
+            )
+        )
+    );
+
+    deleteReview$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ReviewActions.deleteReview),
+            mergeMap((action) =>
+                this.reviewService.deleteReview(action.reviewId, action.reviewFromId).pipe(
+                    map(() => ReviewActions.deleteReviewSuccess({ id: action.reviewId })),
+                    catchError((error) => of(ReviewActions.deleteReviewFailure({ error: error.message })))
+                )
+            )
+        )
+    );
+    
 }

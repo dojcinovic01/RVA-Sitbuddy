@@ -26,6 +26,6 @@ export const reviewReducer = createReducer(
         ...state,
         reviews: state.reviews.filter(review => review.id !== id),
         loading: false,
-    })),
+    })),    
     on(ReviewActions.deleteReviewFailure, (state, { error }) => ({ ...state, loading: false, error }))
 );

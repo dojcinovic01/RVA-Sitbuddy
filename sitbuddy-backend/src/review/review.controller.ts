@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto, UpdateReviewDto } from './review.dto';
 
@@ -23,9 +23,10 @@ export class ReviewController {
     }
 
     @Delete(":id")
-    async deleteReview(@Param("id") id: number, @Body() userId: number){
-        return this.reviewService.delete(id, userId);
+    async deleteReview(@Param("id") id: number, @Query("userId") userId: number) {
+        return this.reviewService.delete(id, Number(userId));
     }
+
     
     @Patch(":id")
     async updateReview(@Param("id") id: number, @Body() updateReviewDto: UpdateReviewDto){
