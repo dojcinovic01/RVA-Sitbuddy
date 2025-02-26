@@ -13,10 +13,11 @@ import { UserService } from '../../core/services/user.service';
 import { environment } from '../../../environments/environments';
 import { BehaviorSubject, map } from 'rxjs';
 import { ReviewComponent } from "../review/review.component";
+import { FollowComponent } from "../follow/follow.component";
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, NavbarComponent, MatIconModule, ReactiveFormsModule, ReviewComponent],
+  imports: [CommonModule, NavbarComponent, MatIconModule, ReactiveFormsModule, ReviewComponent, FollowComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
@@ -28,6 +29,7 @@ export class ProfileComponent implements OnInit {
   profileUser$ = new BehaviorSubject<any>(null);
   isCurrentUser$: Observable<boolean> | undefined;
   isReviewAllowed$:Observable<boolean> | undefined;
+  isFollowAllowed$:Observable<boolean> | undefined;
 
   constructor(
     private store: Store,
@@ -81,8 +83,11 @@ export class ProfileComponent implements OnInit {
         );
       })
     );
+
+    this.isFollowAllowed$ = combineLatest([this.user$, this.profileUser$]).pipe(
+      map(([currentUser, profileUser]) => currentUser?.id !== profileUser?.id)
+    );
     
-  
     this.isCurrentUser$.subscribe(isCurrent => {
       if (isCurrent) {
         this.dataForm.enable();

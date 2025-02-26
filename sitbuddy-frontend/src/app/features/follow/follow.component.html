@@ -1,0 +1,4 @@
+<button (click)="toggleFollow()" [class.following]="isFollowing$ | async">
+    {{ (isFollowing$ | async) ? 'Otprati' : 'Prati' }}
+  </button>
+  

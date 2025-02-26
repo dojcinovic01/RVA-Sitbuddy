@@ -1,0 +1,23 @@
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+  
+    &.following {
+      background: #d91b3a;
+      color: white;
+    }
+  
+    &:not(.following) {
+      background: #ff204e;
+      color: white;
+    }
+  
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+  

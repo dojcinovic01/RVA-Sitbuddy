@@ -13,35 +13,36 @@ export class FollowService {
     private userService: UserService,
   ) {}
 
-  async followUser(followerId: number, followingId: number): Promise<string> {
+  async followUser(followerId: number, followingId: number): Promise<{message:string}> {
     const follower = await this.userService.findById(followerId);
     const following = await this.userService.findById(followingId);
 
-    const existingFollow = await this.followRepository.findOne({
-      where: { follower: { id: followerId }, following: { id: followingId } },
+    const existingFollow = await this.followRepository.findOneBy({
+      follower: { id: followerId },
+      following: { id: followingId },
     });
-
+    
     if (existingFollow) {
-      return 'Already following this user.';
+      return {message: 'Već pratite ovog korisnika.'};
     }
 
     const follow = this.followRepository.create({ follower, following });
     await this.followRepository.save(follow);
 
-    return `User ${follower.fullName} is now following ${following.fullName}.`;
+    return {message:`Korisnik ${follower.fullName} sada prati: ${following.fullName}.`};
   }
 
-  async unfollowUser(followerId: number, followingId: number): Promise<string> {
-    const follow = await this.followRepository.findOne({
-      where: { follower: { id: followerId }, following: { id: followingId } },
+  async unfollowUser(followerId: number, followingId: number): Promise<{message:string}> {
+    const result = await this.followRepository.delete({
+      follower: { id: followerId },
+      following: { id: followingId },
     });
-
-    if (!follow) {
-      throw new NotFoundException('Follow relationship not found.');
+    
+    if (result.affected === 0) {
+      throw new NotFoundException('Ne pratite ovog korisnika.');
     }
-
-    await this.followRepository.delete(follow.id);
-    return `Successfully unfollowed.`;
+    
+    return {message: `Uspešno ste otpratili korisnika.`};
   }
 
   async getFollowing(userId: number): Promise<User[]> {
@@ -51,6 +52,11 @@ export class FollowService {
     });
 
     return follows.map((follow) => follow.following);
+  }
+
+  async isFollowing(userId: number, profileId: number): Promise<boolean> {
+    const follow = await this.followRepository.findOne({where: {follower: {id: userId}, following: {id: profileId}}});
+    return !!follow;
   }
 
   async getFollowers(userId: number): Promise<User[]> {

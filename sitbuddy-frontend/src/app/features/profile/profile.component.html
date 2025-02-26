@@ -24,6 +24,14 @@
         </div>
       </div>
     
+      <div class="follow">
+        <app-follow 
+          *ngIf="isFollowAllowed$ | async" 
+          [loogedInId]="(user$ | async)?.id"
+          [profileId]="(profileUser$ | async)?.id"
+        >
+        </app-follow>
+      </div>
 
       <form [formGroup]="dataForm" >
           <div class="input-group">

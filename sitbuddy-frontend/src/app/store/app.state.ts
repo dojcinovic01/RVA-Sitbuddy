@@ -1,5 +1,6 @@
 import { AdvertismentState } from './advertisment/advertisment.state';
 import { AuthState } from './auth/auth.state';
+import { FollowState } from './follow/follow.state';
 import { ReviewState } from './review/review.state';
 import { UserState } from './user/user.state';
 
@@ -8,4 +9,5 @@ export interface AppState {
   user: UserState;
   advertisment: AdvertismentState;
   review: ReviewState;
+  follow: FollowState;
 }

@@ -7,7 +7,7 @@ export class FollowController {
   constructor(private followService: FollowService) {}
 
   @Post()
-  async followUser(@Body() createFollowDto: CreateFollowDto): Promise<string> {
+  async followUser(@Body() createFollowDto: CreateFollowDto):Promise<{message:string}> {
     const { followerId, followingId } = createFollowDto;
     return this.followService.followUser(followerId, followingId);
   }
@@ -16,13 +16,18 @@ export class FollowController {
   async unfollowUser(
     @Param('followerId') followerId: number,
     @Param('followingId') followingId: number,
-  ): Promise<string> {
+  ):Promise<{message:string}> {
     return this.followService.unfollowUser(followerId, followingId);
   }
 
   @Get('following/:userId')
   async getFollowing(@Param('userId') userId: number): Promise<any> {
     return this.followService.getFollowing(userId);
+  }
+
+  @Get('following/:userId/:profileId')
+  async isFollowing(@Param('userId') userId: number, @Param('profileId') profileId: number): Promise<boolean> {
+    return this.followService.isFollowing(userId, profileId);
   }
 
   @Get('followers/:userId')
