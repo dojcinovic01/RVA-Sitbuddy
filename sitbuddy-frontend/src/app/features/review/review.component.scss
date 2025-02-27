@@ -1,6 +1,6 @@
 .review-container {
   width: 100%;
-  max-width: 90%;
+  max-width: 600px;
   background: linear-gradient(135deg, #FF204E, #00224D);
   border-radius: 15px;
   padding: 20px;
@@ -15,98 +15,113 @@
 }
 
 h3 {
-  color: #000;
+  color: white;
   margin-bottom: 15px;
   font-size: 24px;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-/* Pojedinačne recenzije - sada su jednostavne i bez dodatnih okvira */
+/* Pojedinačne recenzije */
 .user-review, .review-card {
   width: 100%;
-  max-width: 600px;
   text-align: left;
   margin-bottom: 15px;
   padding: 15px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.3); /* Tanak separator umesto okvira */
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease-in-out;
 }
 
+.user-review:hover, .review-card:hover {
+  transform: scale(1.02);
+}
+.review-actions{
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
 .review-author {
   font-weight: bold;
   font-size: 18px;
-  color: #000;
-  margin-bottom: 5px;
+  color: white;
 }
 
 .review-rating {
   color: #ffcc00;
   font-size: 20px;
   font-weight: bold;
-  margin: 5px 0;
 }
 
 .review-comment {
-  color: #000;
+  color: white;
   font-size: 16px;
   margin-top: 8px;
 }
 
 /* Forma za dodavanje i ažuriranje recenzije */
-form {
+.review-form, .edit-form {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  padding-top: 10px;
   width: 100%;
-  max-width: 600px;
-  margin-top: 10px;
+  margin-bottom: 15px;
 }
 
-form textarea, form select {
+.review-list {
+  margin-top: 15px;
+  width: 90%;
+}
+
+textarea{
   width: 100%;
   padding: 10px;
-  border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 5px;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
   font-size: 16px;
-  color: #000000;
-  text-align: center;
+  color: #ffffff;
   outline: none;
 }
 
-form textarea {
+select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  font-size: 16px;
+  color: #ffcc00;
+  outline: none;
+}
+
+textarea {
   height: 80px;
   resize: none;
 }
 
-form textarea::placeholder {
+textarea::placeholder {
   color: #ddd;
   font-style: italic;
 }
 
-form textarea:focus, form select:focus {
-  border-color: #FF204E;
-  box-shadow: 0 0 5px rgba(255, 32, 78, 0.5);
+textarea:focus, select:focus {
+  border: 2px solid #FF204E;
+  box-shadow: 0 0 10px rgba(255, 32, 78, 0.5);
 }
 
-form select {
+select {
   width: 120px;
-  text-align: center;
   cursor: pointer;
-}
-
-.review-actions {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
 }
 
 /* Dugmad */
 button {
   background-color: #FF204E;
-  color: #000000;
+  color: white;
   padding: 10px 15px;
   border: none;
   border-radius: 25px;
@@ -122,12 +137,42 @@ button:hover {
   transform: scale(1.05);
 }
 
-button.delete-btn {
-  background-color: #888;
+.add-btn {
+  background-color: #c60f2e;
 }
 
-button.delete-btn:hover {
-  background-color: #666;
+.add-btn:hover {
+  background-color: #8d0a1f;
+}
+
+.edit-btn {
+  background-color: #007BFF;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+.delete-btn {
+  background-color: #DC3545;
+}
+
+.delete-btn:hover {
+  background-color: #C82333;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 /* Responsivnost */
@@ -135,19 +180,11 @@ button.delete-btn:hover {
   .review-container {
     width: 90%;
   }
-
-  form {
-    width: 100%;
-  }
 }
 
 @media (max-width: 520px) {
   .review-container {
     width: 100%;
     padding: 15px;
-  }
-
-  form {
-    width: 100%;
   }
 }

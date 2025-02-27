@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of } from 'rxjs';
 import { UserService } from '../../core/services/user.service';
-import { loadUser, loadUserSuccess, loadUserFailure, updateUser, updateUserSuccess, updateUserFailure, deleteUser, deleteUserSuccess, deleteUserFailure } from './user.actions';
+import { loadUser, loadUserSuccess, loadUserFailure, updateUser, updateUserSuccess, updateUserFailure, deleteUser, deleteUserSuccess, deleteUserFailure, searchUsers, searchUsersSuccess, searchUsersFailure } from './user.actions';
 import { error } from 'node:console';
 import { logout } from '../auth/auth.actions';
 import { Store } from '@ngrx/store';
@@ -59,4 +59,17 @@ export class UserEffects {
     ),
     { dispatch: false }
   );
+
+  searchUsers$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(searchUsers),
+      mergeMap(action =>
+        this.userService.searchUsers(action.query).pipe(
+          map(users => searchUsersSuccess({ users })),
+          catchError(error => of(searchUsersFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+  
 }

@@ -9,17 +9,19 @@
       <p class="review-comment">{{ review.comment }}</p>
     </div>
 
-    <form *ngIf="isEditing" (ngSubmit)="updateReview(review.id)">
+    <form *ngIf="isEditing" (ngSubmit)="updateReview(review.id)" class="edit-form">
       <textarea [(ngModel)]="editedReview.comment" placeholder="Ažurirajte komentar..." name="edit-comment"></textarea>
       <select [(ngModel)]="editedReview.rating" name="edit-rating">
         <option *ngFor="let r of [1, 2, 3, 4, 5]" [value]="r">{{ r }} ★</option>
       </select>
-      <button type="submit">Sačuvaj</button>
-      <button type="button" (click)="isEditing = false">Otkaži</button>
+      <div class="form-actions">
+        <button type="submit">Sačuvaj</button>
+        <button type="button" class="cancel-btn" (click)="isEditing = false">Otkaži</button>
+      </div>
     </form>
 
     <div class="review-actions">
-      <button (click)="toggleEditMode()">✏️ Izmeni</button>
+      <button class="edit-btn" (click)="toggleEditMode()">✏️ Izmeni</button>
       <button class="delete-btn" (click)="deleteReview(review.id)">🗑️ Obriši</button>
     </div>
   </div>
@@ -31,7 +33,7 @@
       <select [(ngModel)]="newReview.rating">
         <option *ngFor="let r of [1, 2, 3, 4, 5]" [value]="r">{{ r }} ★</option>
       </select>
-      <button (click)="submitReview()">Dodaj recenziju</button>
+      <button class="add-btn" (click)="submitReview()">Dodaj recenziju</button>
     </div>
   </ng-template>
 

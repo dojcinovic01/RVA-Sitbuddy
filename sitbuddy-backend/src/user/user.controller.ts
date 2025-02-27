@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto, UpdateUserDto } from "./user.dto";
 import { User } from "./user.entity";
@@ -29,6 +29,12 @@ export class UserController {
   getAllUsers(): Promise<User[]> {
     return this.userService.getUsers();
   }
+
+  @Get('search')
+  async searchUsers(@Query('q') query: string): Promise<User[]> {
+    return this.userService.searchUsers(query);
+  }
+
 
   // @Get(':email')
   // async getUserByEmail(@Param('email') email: string): Promise<User> {

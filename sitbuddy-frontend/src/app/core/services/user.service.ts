@@ -74,4 +74,9 @@ export class UserService {
       })
     );
   }
+
+  searchUsers(query: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/users/search?q=${query}`);
+  }
+  
 }

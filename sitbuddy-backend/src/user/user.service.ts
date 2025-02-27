@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { ConflictException, forwardRef, Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { ILike, Like, Repository } from "typeorm";
 import { User } from "./user.entity";
 import { CreateUserDto, UpdateUserDto } from "./user.dto";
 import { ReviewService } from "src/review/review.service";
@@ -116,5 +116,16 @@ export class UserService {
     
   }
   
+  async searchUsers(query: string): Promise<User[]> {
+   
+    const users = await this.userRepository.find({
+      where: [
+        { fullName: ILike(`%${query}%`) },
+        { location: ILike(`%${query}%`) }
+
+      ]
+    });
+    return users;
+  }
   
 }

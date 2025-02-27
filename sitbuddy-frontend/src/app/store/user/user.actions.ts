@@ -11,3 +11,7 @@ export const updateUserFailure = createAction('[User] Update User Failure', prop
 export const deleteUser = createAction('[User] Delete User', props<{userId:string}>());
 export const deleteUserSuccess = createAction('[User] Delete User Success');
 export const deleteUserFailure = createAction('[User] Delete User Failure', props<{error:string}>());
+
+export const searchUsers = createAction('[User] Search Users', props<{ query: string }>());
+export const searchUsersSuccess = createAction('[User] Search Users Success', props<{ users: any[] }>());
+export const searchUsersFailure = createAction('[User] Search Users Failure', props<{ error: string }>());

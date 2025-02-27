@@ -32,11 +32,7 @@ export const followReducer = createReducer(
   })),
   on(unfollowUserFailure, (state, { error }) => ({ ...state, loading: false, error })),
   on(loadFollowing, (state) => ({ ...state, loading: true })),
-  on(loadFollowingSuccess, (state, { following }) => {
-    console.log('LOAD FOLLOWING SUCCESS:', following);
-    return { ...state, loading: false, following };
-  }),
-  
+  on(loadFollowingSuccess, (state, { following }) => ({ ...state, loading: false, following })),  
   on(loadFollowingFailure, (state, { error }) => ({ ...state, loading: false, error })),
   on(loadFollowers, (state) => ({ ...state, loading: true })),
   on(loadFollowersSuccess, (state, { followers }) => ({ ...state, loading: false, followers })),

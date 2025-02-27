@@ -1,0 +1,34 @@
+<nav class="navbar">
+    <div class="logo">Sitbuddy</div>
+    <div class="search-container" (click)="$event.stopPropagation()">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchChange($event)"
+        placeholder="Pretraži korisnike"
+        class="search-input"
+      />
+      <div class="search-results" *ngIf="(searchResults$ | async)?.length && showResults">
+        <div *ngFor="let user of searchResults$ | async" (click)="goToProfile(user.id)" class="search-item">
+          <img *ngIf="user.profilePicture" [src]="imageUrl +'/profile-pictures/' + user.profilePicture" class="avatar" />
+          <span>{{ user.fullName }} - {{ user.location }} - {{user.userType === 'parent' ? 'roditelj' : 'siter'}}</span>
+        </div>
+      </div>
+    </div>
+
+    <ul class="nav-links">
+      <li>
+        <a routerLink="/home" routerLinkActive="active">
+          <mat-icon>home</mat-icon>
+        </a>
+      </li>
+      <li *ngIf="(user$ | async) as user">
+        <a [routerLink]="['/profile', user.id]" routerLinkActive="active">
+          <mat-icon>person</mat-icon>
+        </a>
+      </li>
+      <li *ngIf="(token$ | async) as token">
+        <mat-icon (click)="onLogout()">exit_to_app</mat-icon>
+      </li>
+    </ul>
+  </nav>

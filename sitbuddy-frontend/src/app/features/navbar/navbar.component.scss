@@ -1,0 +1,74 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: linear-gradient(90deg, #00224D, #FF204E);
+    color: white;
+    position: relative;
+  }
+  .logo {
+    font-size: 26px;
+    font-weight: bold;
+  }
+  .search-container {
+    position: relative;
+  }
+  .search-input {
+    background: white;
+    padding: 12px;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    width: 250px;
+    font-size: 16px;
+    transition: width 0.3s ease-in-out;
+  }
+  .search-input:focus {
+    width: 300px;
+    color: #FF204E;
+  }
+  .search-results {
+    position: absolute;
+    background: #FF204E;
+    color: white;
+    width: 100%;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 5px 0;
+  }
+  .search-item {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .search-item:hover {
+    background: rgba(165, 8, 39, 0.8);
+  }
+  .avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+  }
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+  }
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+  }
+  .nav-links a.active {
+    border-bottom: 2px solid #FF204E;
+  }
+  .nav-links li:hover mat-icon {
+    color: #00224D;
+    cursor: pointer;
+  }
