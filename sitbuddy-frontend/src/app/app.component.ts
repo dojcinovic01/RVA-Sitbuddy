@@ -2,12 +2,13 @@ import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/cor
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { checkAuthStatus } from './store/auth/auth.actions';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, GoogleMapsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

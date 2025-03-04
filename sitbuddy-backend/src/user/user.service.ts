@@ -2,7 +2,7 @@ import * as bcrypt from 'bcrypt';
 import { ConflictException, forwardRef, Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ILike, Like, Repository } from "typeorm";
-import { User } from "./user.entity";
+import { User, UserType } from "./user.entity";
 import { CreateUserDto, UpdateUserDto } from "./user.dto";
 import { ReviewService } from "src/review/review.service";
 
@@ -41,6 +41,11 @@ export class UserService {
     const users = await this.userRepository.find();
     console.log('Pronađeni korisnici:', users);
     return users;
+  }
+
+  async getSitters(): Promise<User[]> {
+    const sitters = await this.userRepository.find({ where: { userType: UserType.SITTER} });
+    return sitters;
   }
 
   async findByEmail(email: string): Promise<User> {

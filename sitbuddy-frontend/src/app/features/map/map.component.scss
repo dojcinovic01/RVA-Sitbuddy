@@ -1,0 +1,48 @@
+.map-container {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .google-map {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .custom-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .marker-container {
+    width: auto;
+    height: auto;
+    background: white;
+    padding: 3px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .marker-image {
+    width: 30px;  /* Povećano sa 20px na 30px da se bolje vidi */
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #007bff;
+  }
+  
+  .marker-title {
+    font-size: 12px; /* Manji font da ne zauzima previše mesta */
+    font-weight: bold;
+    margin-top: 3px;
+    color: #333;
+  }
+  

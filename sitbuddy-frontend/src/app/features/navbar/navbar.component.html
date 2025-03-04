@@ -27,6 +27,11 @@
           <mat-icon>person</mat-icon>
         </a>
       </li>
+      <li>
+        <a routerLink="/map" routerLinkActive="active">
+          <mat-icon> my_location</mat-icon>
+        </a>
+      </li>
       <li *ngIf="(token$ | async) as token">
         <mat-icon (click)="onLogout()">exit_to_app</mat-icon>
       </li>
