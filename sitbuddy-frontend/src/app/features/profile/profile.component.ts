@@ -10,7 +10,7 @@ import { selectToken } from '../../store/auth/auth.selectors';
 import { selectUser } from '../../store/user/user.selectors';
 import { deleteUser, loadUser, updateUser } from '../../store/user/user.actions';
 import { UserService } from '../../core/services/user.service';
-import { environment } from '../../../environments/environments';
+import { environment } from '../../../environments/environment';
 import { BehaviorSubject, map } from 'rxjs';
 import { ReviewComponent } from "../review/review.component";
 import { FollowComponent } from "../follow/follow.component";

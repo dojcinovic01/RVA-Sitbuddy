@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin, Observable, of } from 'rxjs';
-import { map, mergeMap, toArray } from 'rxjs/operators';
-import { environment } from '../../../environments/environments';
+import { map, mergeMap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 import { Sitter } from '../../features/map/map.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeolocationService {
-  private apiKey = '';
+  private apiKey = environment.googleApiKey;
   private apiUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
   private serverUrl = `${environment.apiUrl}`;
   private coordinatesCache = new Map<string, { lat: number; lng: number }>();

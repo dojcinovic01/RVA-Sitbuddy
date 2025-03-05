@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { selectSearchResults, selectUser } from '../../store/user/user.selectors';
 import { searchUsers } from '../../store/user/user.actions';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../../environments/environments';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-navbar',
