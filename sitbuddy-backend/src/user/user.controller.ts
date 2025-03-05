@@ -30,6 +30,11 @@ export class UserController {
     return this.userService.getUsers();
   }
 
+  @Get('allSitters')
+  getAllSitters(): Promise<User[]> {
+    return this.userService.getSitters();
+  }
+
   @Get('search')
   async searchUsers(@Query('q') query: string): Promise<User[]> {
     return this.userService.searchUsers(query);

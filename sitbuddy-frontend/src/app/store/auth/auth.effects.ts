@@ -40,7 +40,6 @@ export class AuthEffects {
       switchMap(() =>
         this.userService.getCurrentUser().pipe( 
           map(user => {
-            // this.router.navigate(['/home']);
             return loadUserSuccess({ user })
           }), 
           catchError(error => {
@@ -74,6 +73,7 @@ export class AuthEffects {
       tap(() => {
         localStorage.removeItem('token');
         this.router.navigate(['/']); 
+        window.location.reload();
       })
     ),
     { dispatch: false }
