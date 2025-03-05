@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GoogleMap, GoogleMapsModule } from '@angular/google-maps';
+import { GoogleMapsService } from '../../core/services/google-maps.service';  // Importuj servis
+import { GoogleMapsModule } from '@angular/google-maps';
 import { Router } from '@angular/router';
 import { GeolocationService } from '../../core/services/geolocation.service';
 import { MapService } from '../../core/services/map.service';
@@ -22,6 +23,7 @@ export class MapComponent implements OnInit {
   map!: google.maps.Map;
 
   constructor(
+    private googleMapsService: GoogleMapsService, // Dodaj servis
     private geolocationService: GeolocationService,
     private mapService: MapService,
     private router: Router,
@@ -29,7 +31,13 @@ export class MapComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadSitters();
+    // Prvo učitaj Google Maps API
+    this.googleMapsService.loadGoogleMapsApi().then(() => {
+      console.log('Google Maps API je uspešno učitan!');
+      this.loadSitters(); // Nakon toga učitaj sittere
+    }).catch((error) => {
+      console.error('Greška pri učitavanju Google Maps API:', error);
+    });
   }
 
   private loadSitters(): void {
@@ -38,8 +46,8 @@ export class MapComponent implements OnInit {
         this.sitters = sitters;
         this.markers = this.mapService.createMarkers(sitters);
 
-        console.log('Sitters WITH CORORDINATES:', this.sitters);
-        console.log('Markers:', this.markers);
+        // console.log('Sitters WITH CORORDINATES:', this.sitters);
+        // console.log('Markers:', this.markers);
 
         if (this.mapContainer) {
           this.map = this.mapService.createMap(this.mapContainer.nativeElement);

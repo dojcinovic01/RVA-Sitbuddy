@@ -35,7 +35,6 @@ export class MapService {
             .pipe(take(1))
             .subscribe((coords) => {
               if (coords) {
-                console.log('Korisnikova lokacija:', coords);
                 this.defaultCenter = coords;
                 this.updateMapCenter(coords); // ✅ Ažuriramo centar mape
               }
@@ -67,6 +66,7 @@ export class MapService {
         position: new google.maps.LatLng(sitter.latitude!, sitter.longitude!),
         title: sitter.fullName,
         profilePicture: sitter.profilePicture || '',
+        averageRating: sitter.averageRating,
       }));
   }
 
@@ -95,11 +95,10 @@ export class MapService {
       : null;
 
     const defaultIcon = `<span style="font-size: 40px;">👤</span>`;
-
     const div = document.createElement('div');
     div.className = 'custom-marker';
     div.innerHTML = `
-      <div class="marker-container" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 5px;">
+      <div class="marker-container" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 3px;">
         ${
           profilePictureUrl
             ? `<img src="${profilePictureUrl}" 
@@ -111,10 +110,14 @@ export class MapService {
         <span class="marker-title" style="font-size: 14px; font-weight: bold; color: #333; text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);">
           ${markerData.title}
         </span>
+        <span class="marker-rating" style="font-size: 14px; color:rgb(0, 0, 0); font-weight: bold;">
+          ⭐ ${markerData.averageRating ? markerData.averageRating.toFixed(1) : 'N/A'}
+        </span>
       </div>
     `;
 
     div.addEventListener('click', () => onClick(markerData.id));
     return div;
-  }
+}
+
 }

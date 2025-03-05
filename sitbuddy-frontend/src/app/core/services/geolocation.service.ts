@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin, Observable, of } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap, toArray } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Sitter } from '../../features/map/map.model';
 
@@ -22,6 +22,7 @@ export class GeolocationService {
     }
 
     const url = `${this.apiUrl}?address=${encodeURIComponent(address)}&key=${this.apiKey}`;
+    
 
     return this.http.get<any>(url).pipe(
       map((response) => {

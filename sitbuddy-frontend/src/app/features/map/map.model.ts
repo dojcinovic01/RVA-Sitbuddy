@@ -5,6 +5,7 @@ export interface Sitter {
     location: string;
     latitude?: number;
     longitude?: number;
+    averageRating?: number;
   }
   
   export interface MarkerData {
@@ -12,5 +13,6 @@ export interface Sitter {
     position: google.maps.LatLng;
     title: string;
     profilePicture: string;
+    averageRating?: number;
   }
   

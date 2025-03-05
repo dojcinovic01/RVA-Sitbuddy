@@ -44,9 +44,18 @@ export class UserService {
   }
 
   async getSitters(): Promise<User[]> {
-    const sitters = await this.userRepository.find({ where: { userType: UserType.SITTER} });
-    return sitters;
+    const sitters = await this.userRepository.find({ where: { userType: UserType.SITTER } });
+  
+    const sittersWithRatings = await Promise.all(
+      sitters.map(async (sitter) => {
+        const averageRating = await this.calculateAverageRating(sitter.id);
+        return { ...sitter, averageRating };
+      })
+    );
+  
+    return sittersWithRatings;
   }
+  
 
   async findByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { email } }); // Tražimo korisnika po email-u
