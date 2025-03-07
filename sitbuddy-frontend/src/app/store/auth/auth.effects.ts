@@ -83,7 +83,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(register),
       mergeMap(action =>
-        this.authService.register(action.fullName, action.email, action.password, action.location, action.phoneNumber,action.userType).pipe(
+        this.authService.register(action.fullName, action.email, action.password, action.location, action.phoneNumber,action.userType, action.hourlyRate).pipe(
           map(() => {
             alert('Registracija uspešna! Preusmeravanje na login stranicu...');
             setTimeout(() => {

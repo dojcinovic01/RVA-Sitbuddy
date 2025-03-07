@@ -1,9 +1,12 @@
 import { 
+  IsDecimal,
   IsEmail, 
   IsEnum, 
   IsNotEmpty, 
+  IsNumber, 
   IsOptional, 
   IsString, 
+  Min, 
   MinLength 
 } from "class-validator";
 import { UserType } from "src/user/user.entity";
@@ -41,6 +44,12 @@ export class CreateUserDto {
   @IsEnum(UserType)
   @IsNotEmpty() 
   userType?: UserType;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  hourlyRate?: number;
+
 }
 
 export class UpdateUserDto {
@@ -77,5 +86,11 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   criminalRecordProof?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  hourlyRate?: number;
+  
 
 }

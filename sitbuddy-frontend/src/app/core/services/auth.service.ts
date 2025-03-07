@@ -48,15 +48,18 @@ export class AuthService {
     password: string, 
     location: string, 
     phoneNumber: string, 
-    userType: 'parent' | 'sitter'
+    userType: 'parent' | 'sitter',
+    hourlyRate?: number
   ): Observable<{ user: any; token: string }> {
+    console.log('register', fullName, email, password, location, phoneNumber, userType, hourlyRate);
     return this.http.post<{ user: any; token: string }>(`${this.apiUrl}/users/register`, { 
       fullName, 
       email, 
       password, 
       location, 
       phoneNumber, 
-      userType 
+      userType,
+      hourlyRate
     });
   }
 }

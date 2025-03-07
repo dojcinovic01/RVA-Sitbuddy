@@ -4,6 +4,7 @@ export interface User {
     email: string;
     profilePicture: string;
     userType: "parent" | "sitter";
+    criminalRecordProof: string;
 }
 
 export interface Advertisment {

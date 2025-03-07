@@ -55,4 +55,8 @@ export class User {
 
   @Column({ nullable: true })
   criminalRecordProof: string; 
+
+  @Column({ nullable: true })
+  hourlyRate: number; 
+
 }

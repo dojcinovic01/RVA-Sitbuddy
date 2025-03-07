@@ -46,6 +46,8 @@ export class ProfileComponent implements OnInit {
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       location: ['', Validators.required],
       phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      email: ['', [Validators.required, Validators.email]],
+      hourlyRate: ['', Validators.min(0)]
     });
    
   }
@@ -116,6 +118,8 @@ export class ProfileComponent implements OnInit {
         fullName: this.dataForm.value.fullName || user.fullName,
         location: this.dataForm.value.location || user.location,
         phoneNumber: this.dataForm.value.phoneNumber || user.phoneNumber,
+        email: this.dataForm.value.email || user.email,
+        hourlyRate: this.dataForm.value.hourlyRate || user.hourlyRate,
         ...(this.dataForm.value.oldPassword && this.dataForm.value.newPassword && {
           oldPassword: this.dataForm.value.oldPassword,
           newPassword: this.dataForm.value.newPassword

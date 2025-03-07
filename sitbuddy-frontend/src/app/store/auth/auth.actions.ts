@@ -26,6 +26,7 @@ export const register = createAction(
     location: string; 
     phoneNumber: string; 
     userType: 'parent' | 'sitter'; 
+    hourlyRate?: number;
   }>()
 );
 

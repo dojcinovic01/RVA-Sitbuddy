@@ -13,7 +13,7 @@
           </div>
         </div>
         
-        <div class="criminal-proof" (click)="OpenCriminalProof()">
+        <div class="criminal-proof" (click)="OpenCriminalProof()" *ngIf="(profileUser$ | async)?.userType === 'sitter'">
           <div *ngIf="(profileUser$ | async)?.criminalRecordProof">
             <mat-icon>check_circle</mat-icon>
           </div>
@@ -59,18 +59,28 @@
             <input id="phoneNumber" formControlName="phoneNumber" type="tel" placeholder="{{(profileUser$ | async)?.phoneNumber}}" />
           </div>
 
+          <div class="input-group">
+            <label for="email">E-adresa</label>
+            <input id="email" formControlName="email" type="email" placeholder="{{(profileUser$ | async)?.email}}" />
+          </div>
+
+          <div class="input-group" *ngIf="(profileUser$ | async)?.userType === 'sitter'">
+            <label for="hourlyRate">Cena po satu (RSD)</label>
+            <input id="hourlyRate" formControlName="hourlyRate" type="number" placeholder="{{(profileUser$ | async)?.hourlyRate}}" />
+          </div>
+
           <div *ngIf="isCurrentUser$ | async" class="update-elements">
             <div class="update-icon"  (click)="updateData()">
               <mat-icon>update</mat-icon>
               <p class="azuriraj-text">Ažuriraj podatke</p>
             </div>
 
-            <div class="update-criminal-image" (click)="openFileInput('criminalRecordProof')">
+            <div class="update-criminal-image" (click)="openFileInput('criminalRecordProof')" *ngIf="(profileUser$ | async)?.userType === 'sitter'">
               <mat-icon>image_search</mat-icon>
               <p class="azuriraj-neosudjivanost">Dodaj potvrdu o neosudjivanosti</p>
             </div>
 
-            <div class="delete-criminal-image" (click)="deleteCriminalProof()">
+            <div class="delete-criminal-image" (click)="deleteCriminalProof()" *ngIf="(profileUser$ | async)?.userType === 'sitter'">
               <mat-icon>broken_image</mat-icon>
               <p class="ukloni-neosudjivanost">Ukloni potvrdu o neosudjivanosti</p>
             </div>

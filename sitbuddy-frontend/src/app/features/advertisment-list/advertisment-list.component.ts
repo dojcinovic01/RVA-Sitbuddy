@@ -6,11 +6,13 @@ import * as AdvertismentActions from '../../store/advertisment/advertisment.acti
 import { selectAllAdvertisments } from '../../store/advertisment/advertisment.selectors';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-advertisment-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MatIconModule, MatTooltipModule],
   templateUrl: './advertisment-list.component.html',
   styleUrls: ['./advertisment-list.component.scss']
 })

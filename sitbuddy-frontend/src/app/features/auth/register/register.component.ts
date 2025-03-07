@@ -40,8 +40,7 @@ import { Router } from '@angular/router';
             <div class="form-column">
               <div class="input-group">
                 <label for="location">Lokacija</label>
-                <input id="location" formControlName="location" type="text" placeholder="Unesite vašu lokaciju" />
-                <small class="location-example">Primer: "Bulevar Kralja Aleksandra 73, Beograd, Srbija"</small>
+                <input id="location" formControlName="location" type="text" placeholder="Primer: Bulevar Kralja Aleksandra 73, Beograd, Srbija" />
               </div>
 
               <div class="input-group">
@@ -51,11 +50,16 @@ import { Router } from '@angular/router';
 
               <div class="input-group">
                 <label for="userType">Tip korisnika</label>
-                <select id="userType" formControlName="userType">
+                <select id="userType" formControlName="userType" (change)="onUserTypeChange()">
                   <option value="" disabled>Izaberite </option>
                   <option value="parent">Roditelj</option>
                   <option value="sitter">Siter</option>
                 </select>
+              </div>
+              
+              <div class="input-group" *ngIf="isSitter">
+                <label for="hourlyRate">Cena po satu (RSD)</label>
+                <input id="hourlyRate" formControlName="hourlyRate" type="number" placeholder="Unesite cenu po satu" />
               </div>
             </div>
           </div>
@@ -84,7 +88,7 @@ import { Router } from '@angular/router';
       background: linear-gradient(135deg, #FF204E, #00224D);
       padding: 40px;
       border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      
       width: 100%;
       max-width: 600px;
       text-align: center;
@@ -108,7 +112,6 @@ import { Router } from '@angular/router';
     label {
       display: block;
       font-size: 16px;
-      color: rgba(0, 0, 0, 0.8);
       margin-bottom: 5px;
     }
 
@@ -116,15 +119,7 @@ import { Router } from '@angular/router';
       width: 100%;
       padding: 10px;
       font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    .location-example {
-      font-size: 12px;
-      color: rgba(0, 0, 0, 0.7);
-      display: block;
-      margin-top: 5px;
+      
     }
 
     button {
@@ -132,15 +127,7 @@ import { Router } from '@angular/router';
       padding: 8px;
       background-color: #FF204E;
       color: black;
-      font-size: 14px;
-      border: none;
       border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #A0153E;
     }
 
     button:disabled {
@@ -148,26 +135,31 @@ import { Router } from '@angular/router';
       cursor: not-allowed;
     }
 
-    .login-link {
-      margin-top: 15px;
-      font-size: 14px;
-      color: black;
-    }
-
-    .login-link a {
-      color: #FF204E;
+    button:enabled{
       cursor: pointer;
-      text-decoration: underline;
     }
 
-    .login-link a:hover {
-      color: #A0153E;
-    }
+    .login-link {
+        margin-top: 15px;
+        font-size: 14px;
+        color: black;
+      }
+
+      .login-link a {
+        color: #FF204E;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+
+      .login-link a:hover {
+        color: #A0153E;
+      }
     `
-  ],
+  ]
 })
 export class RegisterComponent {
   registerForm: FormGroup;
+  isSitter = false;
 
   constructor(private fb: FormBuilder, private store: Store, private router: Router) {
     this.registerForm = this.fb.group({
@@ -177,18 +169,31 @@ export class RegisterComponent {
       confirmPassword: ['', Validators.required],
       location: ['', Validators.required],
       phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      userType: ['', Validators.required]
+      userType: ['', Validators.required],
+      hourlyRate: [{ value: null, disabled: true }, Validators.min(0)]
     });
+  }
+
+  onUserTypeChange() {
+    this.isSitter = this.registerForm.value.userType === 'sitter';
+    if (this.isSitter) {
+      this.registerForm.get('hourlyRate')?.enable();
+      this.registerForm.get('hourlyRate')?.setValidators([Validators.required, Validators.min(0)]);
+    } else {
+      this.registerForm.get('hourlyRate')?.disable();
+      this.registerForm.get('hourlyRate')?.clearValidators();
+    }
+    this.registerForm.get('hourlyRate')?.updateValueAndValidity();
   }
 
   onSubmit() {
     if (this.registerForm.valid) {
-      const { fullName, email, password, confirmPassword, location, phoneNumber, userType } = this.registerForm.value;
-      if (password !== confirmPassword) {
+      const formValue = this.registerForm.value;
+      if (formValue.password !== formValue.confirmPassword) {
         alert("Lozinke se ne podudaraju!");
         return;
       }
-      this.store.dispatch(register({ fullName, email, password, location, phoneNumber, userType }));
+      this.store.dispatch(register(formValue));
     }
   }
 
