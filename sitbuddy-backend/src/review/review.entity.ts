@@ -1,5 +1,7 @@
 import { User } from "src/user/user.entity";
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from "typeorm";
+import { Report } from "src/report/report.entity";
+
 
 @Entity()
 export class Review {
@@ -17,4 +19,7 @@ export class Review {
 
   @ManyToOne(() => User, (user) => user.reviewsTo, { eager: true, onDelete: "CASCADE" })
   reviewTo: User;
+
+  @OneToMany(() => Report, (report) => report.reportedReview)
+  reports: Report[]; // Prijave vezane za ovu recenziju
 }

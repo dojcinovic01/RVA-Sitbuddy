@@ -7,6 +7,7 @@ import { NavbarComponent } from "../navbar/navbar.component";
 import { selectToken } from '../../store/auth/auth.selectors';
 import { AdvertismentComponent } from "../advertisment/advertisment.component";
 import { AdvertismentListComponent } from '../advertisment-list/advertisment-list.component';
+import { selectUser } from '../../store/user/user.selectors';
 
 @Component({
   selector: 'app-home',
@@ -56,4 +57,17 @@ export class HomeComponent {
   constructor(private store: Store, private router: Router) {}
 
  
+  ngOnInit(): void {
+      this.store.select(selectToken).subscribe(token => {
+        if (token) {
+          this.store.select(selectUser).subscribe(user => {
+            if (user?.userType === 'admin') {
+              this.router.navigate(['/admin']);
+            } else {
+              this.router.navigate(['/home']);
+            }
+          });
+        }
+      });
+    }
 }

@@ -14,6 +14,8 @@ import { environment } from '../../../environments/environment';
 import { BehaviorSubject, map } from 'rxjs';
 import { ReviewComponent } from "../review/review.component";
 import { FollowComponent } from "../follow/follow.component";
+import { MatDialog } from '@angular/material/dialog';
+import { ReportDialogComponent } from '../report-dialog/report-dialog.component';
 
 @Component({
   selector: 'app-profile',
@@ -36,7 +38,8 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private dialog: MatDialog
   ) {
     this.user$ = this.store.select(selectUser);
     this.token$ = this.store.select(selectToken);
@@ -203,6 +206,20 @@ export class ProfileComponent implements OnInit {
         next: () => this.store.dispatch(loadUser({ userId: user.id })),
         error: (error: any) => console.error('Greška pri brisanju potvrde o neosuđivanosti:', error)
       });
+    });
+  }
+
+  openReportDialog( event: MouseEvent): void {
+    event.stopPropagation(); 
+  
+    this.dialog.open(ReportDialogComponent, {
+      width: '400px',
+      disableClose: true,
+      data: { type: 'user', reportedUserId:this.profileUser$.value.id }
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Prijava profila poslana:', result);
+      }
     });
   }
 }

@@ -149,10 +149,17 @@ export class LoginComponent {
   ngOnInit(): void {
     this.store.select(selectToken).subscribe(token => {
       if (token) {
-        this.router.navigate(['/home']);
+        this.store.select(selectUser).subscribe(user => {
+          if (user?.userType === 'admin') {
+            this.router.navigate(['/admin']);
+          } else {
+            this.router.navigate(['/home']);
+          }
+        });
       }
     });
   }
+  
 
   onSubmit() {
     if (this.loginForm.valid) {

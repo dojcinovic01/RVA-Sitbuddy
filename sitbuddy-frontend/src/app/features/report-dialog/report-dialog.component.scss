@@ -1,0 +1,38 @@
+.dialog-container {
+    padding: 20px;
+    background: linear-gradient(135deg, #a10625, #FF204E);
+  }
+  
+  .dialog-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .ad-title {
+    font-size: 16px;
+    color: #000000;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .cancel-button {
+    color: #000000;
+  }
+  
+  
+  

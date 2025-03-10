@@ -43,6 +43,9 @@
       <p class="review-author">{{ review.reviewFrom.fullName }}</p>
       <p class="review-rating">{{ review.rating }} ★</p>
       <p class="review-comment">{{ review.comment }}</p>
+      <div class="report">
+        <mat-icon matTooltip="Prijavi recenziju" color="black" matTooltipPosition="right" (click)="openReportDialog(review.id, $event)">report_problem</mat-icon>
+    </div>
     </div>
   </div>
 </div>

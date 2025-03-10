@@ -8,6 +8,7 @@ import { appEffects } from './store/app.effects';
 import { provideEffects } from '@ngrx/effects';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { APP_BASE_HREF } from '@angular/common';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 
 export const appConfig: ApplicationConfig = {
@@ -17,6 +18,7 @@ export const appConfig: ApplicationConfig = {
     { provide: APP_BASE_HREF, useValue: '/' },
     provideStore(reducers),
     provideEffects(appEffects),
+    provideAnimations(),
 
   ],
 };

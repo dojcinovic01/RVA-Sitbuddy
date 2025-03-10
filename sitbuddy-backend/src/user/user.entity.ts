@@ -2,6 +2,7 @@ import { Advertisment } from "src/advertisment/advertisment.entity";
 import { Follow } from "src/follow/follow.entity";
 import { Review } from "src/review/review.entity";
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne } from "typeorm";
+import { Report } from "src/report/report.entity";
 
 export enum UserType {
   ADMIN = 'admin',
@@ -59,4 +60,9 @@ export class User {
   @Column({ nullable: true })
   hourlyRate: number; 
 
+  @OneToMany(() => Report, (report) => report.reportedBy)
+  reportsFiled: Report[]; // Prijave koje je korisnik podneo
+
+  @OneToMany(() => Report, (report) => report.reportedUser)
+  reportsReceived: Report[]; // Prijave protiv korisnika
 }

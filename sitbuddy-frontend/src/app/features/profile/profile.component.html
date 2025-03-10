@@ -33,6 +33,13 @@
         </app-follow>
       </div>
 
+      <div class="report">
+        <button (click)="openReportDialog($event)">
+          Prijavi profil
+        </button>
+       
+      </div>
+
       <form [formGroup]="dataForm" >
           <div class="input-group">
             <label for="fullName">Ime i prezime</label>

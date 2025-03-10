@@ -9,6 +9,7 @@ button {
     &.following {
       background: #d91b3a;
       color: white;
+     
     }
   
     &:not(.following) {
@@ -18,6 +19,7 @@ button {
   
     &:hover {
       opacity: 0.8;
+      transform: scale(1.05);
     }
   }
   

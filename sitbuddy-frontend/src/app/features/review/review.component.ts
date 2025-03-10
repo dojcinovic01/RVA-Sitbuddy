@@ -9,11 +9,14 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ReportDialogComponent } from '../report-dialog/report-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-review',
   standalone: true,
-  imports: [CommonModule, MatIconModule, ReactiveFormsModule, FormsModule, RouterModule],
+  imports: [CommonModule, MatIconModule, ReactiveFormsModule, FormsModule, RouterModule, MatTooltipModule],
   templateUrl: './review.component.html',
   styleUrls: ['./review.component.scss'],
 })
@@ -25,6 +28,7 @@ export class ReviewComponent implements OnInit {
   userReview: Review | null = null;
   isEditing = false;
   editedReview: Partial<Review> = {};
+  
 
   newReview: Omit<Review, 'id'> = {
     comment: '',
@@ -33,7 +37,7 @@ export class ReviewComponent implements OnInit {
     reviewTo: {} as User
   };
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private dialog: MatDialog) {
     this.user$ = this.store.select(selectUser);
     this.reviews$ = this.store.select(selectReviews);
   }
@@ -47,6 +51,7 @@ export class ReviewComponent implements OnInit {
     });
 
     this.reviews$.subscribe(reviews => {
+      console.log('REVIEWS',reviews);
       if (reviews.length) {
         this.userReview = reviews.find(review => review.reviewFrom.id === this.newReview.reviewFrom.id) || null;
       }
@@ -93,4 +98,17 @@ export class ReviewComponent implements OnInit {
     this.store.dispatch(ReviewActions.deleteReview({ reviewId: id, reviewFromId: Number(this.newReview.reviewFrom.id) }));
     this.userReview = null;
   }
+
+  openReportDialog(reviewId: number,event: MouseEvent): void {
+      event.stopPropagation(); 
+    
+      this.dialog.open(ReportDialogComponent, {
+        width: '400px',
+        data: { type: 'review', reviewId}
+      }).afterClosed().subscribe(result => {
+        if (result) {
+          console.log('Prijava recenzije poslana:', result);
+        }
+      });
+    }
 }
