@@ -20,8 +20,6 @@ export class ReportService {
 
   async create(createReportDto: CreateReportDto): Promise<Report> {
     const { reportedById, type, reportedUserId, reportedAdvertismentId, reportedReviewId, reason } = createReportDto;
-    console.log('createReportDto:', createReportDto);
-    console.log('reportedById:', reportedById);
 
     let reportedUser, reportedAdvertisment, reportedReview;
 
@@ -61,9 +59,31 @@ export class ReportService {
     return report;
   }
 
+  async findByType(type: ReportType): Promise<Report[]> {
+    return this.reportRepository.find({ where: { type }, relations: ['reportedUser', 'reportedAdvertisment', 'reportedReview'] });
+  }
+  
   async delete(id: number): Promise<{ message: string }> {
     const report = await this.findById(id);
     await this.reportRepository.remove(report);
     return { message: `Prijava sa ID-jem ${id} je uspešno obrisana.` };
   }
+
+  async deleteReportedContent(id: number): Promise<{ message: string }> {
+    const report = await this.findById(id);
+  
+    console.log('REPORT->', report);
+    if (report.reportedUser) {
+      await this.userService.delete(report.reportedUser.id);
+    } else if (report.reportedAdvertisment) {
+      await this.advertismentService.delete(report.reportedAdvertisment.id);
+    } else if (report.reportedReview) {
+      await this.reviewService.delete(report.reportedReview.id);
+    }
+  
+    await this.reportRepository.remove(report);
+  
+    return { message: `Prijava i prijavljeni sadržaj su uspešno obrisani.` };
+  }
+  
 }

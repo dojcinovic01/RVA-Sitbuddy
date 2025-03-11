@@ -5,6 +5,7 @@ import { userReducer } from './user/user.reducer';
 import { advertismentReducer } from './advertisment/advertisment.reducer';
 import { reviewReducer } from './review/review.reducer';
 import { followReducer } from './follow/follow.reducer';
+import { reportReducer } from './report/report.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: authReducer,
@@ -12,4 +13,5 @@ export const reducers: ActionReducerMap<AppState> = {
   advertisment: advertismentReducer,
   review: reviewReducer,
   follow: followReducer,
+  report: reportReducer
 };

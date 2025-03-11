@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Get, Param, Delete } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { CreateReportDto } from './report.dto';
-import { Report } from './report.entity';
+import { Report, ReportType } from './report.entity';
 
 @Controller('reports')
 export class ReportController {
@@ -22,8 +22,20 @@ export class ReportController {
     return this.reportService.findById(id);
   }
 
+  @Get('type/:type')
+  async findByType(@Param('type') type: ReportType): Promise<Report[]> {
+    return this.reportService.findByType(type);
+  }
+
+
   @Delete(':id')
   async delete(@Param('id') id: number): Promise<{ message: string }> {
     return this.reportService.delete(id);
   }
+
+  @Delete(':id/content')
+  async deleteReportedContent(@Param('id') id: number): Promise<{ message: string }> {
+    return this.reportService.deleteReportedContent(id);
+  }
+
 }

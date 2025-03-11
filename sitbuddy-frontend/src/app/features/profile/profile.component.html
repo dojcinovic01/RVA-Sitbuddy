@@ -33,7 +33,7 @@
         </app-follow>
       </div>
 
-      <div class="report">
+      <div class="report" *ngIf="!(isCurrentUser$ | async)">
         <button (click)="openReportDialog($event)">
           Prijavi profil
         </button>

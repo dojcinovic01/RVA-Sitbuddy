@@ -11,7 +11,7 @@
                     <mat-icon *ngIf="ad.adFrom?.criminalRecordProof; else noProof" 
                         matTooltip="Korisnik ima potvrdu o neosuđivanosti" matTooltipPosition="right" class="criminal-proof-icon">check_circle</mat-icon>
                     <ng-template #noProof>
-                        <mat-icon matTooltip="Korisnik nema potvrdu o neosuđivanosti" class="criminal-proof-icon">error</mat-icon>
+                        <mat-icon matTooltip="Korisnik nema potvrdu o neosuđivanosti" matTooltipPosition="right" class="criminal-proof-icon">error</mat-icon>
                     </ng-template>
                 </div>
     

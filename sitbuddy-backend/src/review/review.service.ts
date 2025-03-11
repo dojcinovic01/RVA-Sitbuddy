@@ -66,12 +66,13 @@ export class ReviewService {
         return this.reviewRepository.find({where: {reviewTo: {id}}});
     }
 
-    async delete(id: number, userId: number): Promise<void> {
+    async delete(id: number, userId?: number): Promise<void> {
         const review = await this.findById(id);
     
-        if (review.reviewFrom.id !== userId) {
+        if(userId && review.reviewFrom.id !== userId){
             throw new ForbiddenException("Nemate dozvolu da obrišete ovu recenziju.");
         }
+        
     
         await this.reviewRepository.delete(id);
     }
