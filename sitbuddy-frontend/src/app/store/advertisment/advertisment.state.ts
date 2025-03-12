@@ -3,8 +3,9 @@ export interface User {
     fullName: string;
     email: string;
     profilePicture: string;
-    userType: "parent" | "sitter";
+    userType: "parent" | "sitter" | "admin";
     criminalRecordProof: string;
+    averageRating: number;
 }
 
 export interface Advertisment {

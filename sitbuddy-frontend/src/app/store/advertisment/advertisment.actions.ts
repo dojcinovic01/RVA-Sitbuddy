@@ -20,3 +20,15 @@ export const updateAdvertismentFailure = createAction('[Advertisment] Update Adv
 export const deleteAdvertisment = createAction('[Advertisment] Delete Advertisment', props<{ id: number }>());
 export const deleteAdvertismentSuccess = createAction('[Advertisment] Delete Advertisment Success', props<{ id: number }>());
 export const deleteAdvertismentFailure = createAction('[Advertisment] Delete Advertisment Failure', props<{ error: string }>());
+
+export const loadFollowedAdvertisments = createAction('[Advertisment] Load Followed Advertisments', props<{ userId: number }>());
+export const loadFollowedAdvertismentsSuccess = createAction('[Advertisment] Load Followed Advertisments Success', props<{ advertisments: Advertisment[] }>());
+export const loadFollowedAdvertismentsFailure = createAction('[Advertisment] Load Followed Advertisments Failure', props<{ error: string }>());
+
+export const loadTopRatedAdvertisments = createAction('[Advertisment] Load Top Rated Advertisments');
+export const loadTopRatedAdvertismentsSuccess = createAction('[Advertisment] Load Top Rated Advertisments Success', props<{ advertisments: Advertisment[] }>());
+export const loadTopRatedAdvertismentsFailure = createAction('[Advertisment] Load Top Rated Advertisments Failure', props<{ error: string }>());
+
+export const loadCriminalProofAdvertisments = createAction('[Advertisment] Load Criminal Proof Advertisments');
+export const loadCriminalProofAdvertismentsSuccess = createAction('[Advertisment] Load Criminal Proof Advertisments Success', props<{ advertisments: Advertisment[] }>());
+export const loadCriminalProofAdvertismentsFailure = createAction('[Advertisment] Load Criminal Proof Advertisments Failure', props<{ error: string }>());

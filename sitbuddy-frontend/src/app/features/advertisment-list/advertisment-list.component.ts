@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Advertisment } from '../../store/advertisment/advertisment.state';
+import { Advertisment, User } from '../../store/advertisment/advertisment.state';
 import * as AdvertismentActions from '../../store/advertisment/advertisment.actions';
 import { selectAllAdvertisments } from '../../store/advertisment/advertisment.selectors';
 import { CommonModule } from '@angular/common';
@@ -19,6 +19,7 @@ import { ReportDialogComponent } from '../report-dialog/report-dialog.component'
   styleUrls: ['./advertisment-list.component.scss']
 })
 export class AdvertismentListComponent implements OnInit {
+  @Input() user?: User | null;
   advertisments$: Observable<Advertisment[]>;
 
   constructor(private store: Store, private router: Router, private dialog: MatDialog) {
@@ -27,9 +28,27 @@ export class AdvertismentListComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(AdvertismentActions.loadAdvertisments());
-    this.advertisments$.subscribe(advertisments => {
-      console.log(advertisments);
-    });
+    // this.advertisments$.subscribe(advertisments => {
+    //   console.log('Trenutni oglasi:', advertisments);
+    // });
+  }
+
+  loadAllAds(): void {
+    this.store.dispatch(AdvertismentActions.loadAdvertisments());
+  }
+
+  loadFollowedAds(): void {
+    if (this.user?.id !== undefined) {
+      this.store.dispatch(AdvertismentActions.loadFollowedAdvertisments({ userId: this.user.id }));
+    }
+  }
+
+  loadTopRatedAds(): void {
+    this.store.dispatch(AdvertismentActions.loadTopRatedAdvertisments());
+  }
+
+  loadCriminalProofAds(): void {
+    this.store.dispatch(AdvertismentActions.loadCriminalProofAdvertisments());
   }
 
   navigateToProfile(userId: number): void {
@@ -37,8 +56,7 @@ export class AdvertismentListComponent implements OnInit {
   }
 
   openReportDialog(adId: number, reportedUserId: number, adTitle: string, event: MouseEvent): void {
-    event.stopPropagation(); 
-  
+    event.stopPropagation();
     this.dialog.open(ReportDialogComponent, {
       width: '400px',
       data: { type: 'advertisment', adId, reportedUserId, entityTitle: adTitle }
@@ -48,5 +66,4 @@ export class AdvertismentListComponent implements OnInit {
       }
     });
   }
-  
 }

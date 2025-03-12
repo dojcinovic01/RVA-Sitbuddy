@@ -7,3 +7,4 @@ export const selectAllAdvertisments = createSelector(selectAdvertismentState, (s
 export const selectUserAdvertisment = createSelector(selectAdvertismentState, (state) => state.userAdvertisment);
 export const selectAdvertismentLoading = createSelector(selectAdvertismentState, (state) => state.loading);
 export const selectAdvertismentError = createSelector(selectAdvertismentState, (state) => state.error);
+

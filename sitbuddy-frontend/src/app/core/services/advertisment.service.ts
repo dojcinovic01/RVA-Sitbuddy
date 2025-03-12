@@ -27,6 +27,19 @@ export class AdvertismentService {
     return this.http.get<Advertisment | null>(`${this.apiUrl}/user/${userId}`);
   }
 
+  getFollowedAdvertisments(userId: number): Observable<Advertisment[]> {
+    return this.http.get<Advertisment[]>(`${this.apiUrl}/followed/${userId}`);
+  }
+  
+  getTopRatedAdvertisments() : Observable<Advertisment[]> {
+    return this.http.get<Advertisment[]> (`${this.apiUrl}/top-rated`);
+  }
+  
+  getCriminalProofAdvertisments() :  Observable<Advertisment[]>{
+    return this.http.get<Advertisment[]>(`${this.apiUrl}/criminal-proof`);
+  }
+  
+
   // Kreiranje oglasa
   create(advertisment: Omit<Advertisment, 'id'>): Observable<Advertisment> {
     return this.http.post<Advertisment>(`${this.apiUrl}/create`, advertisment);

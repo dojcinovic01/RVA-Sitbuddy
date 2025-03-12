@@ -17,6 +17,16 @@ export class AdvertismentController {
         return this.advertismentService.findAll();
     }
 
+    @Get("top-rated")
+    async getTopRatedAdvertisments() {
+        return this.advertismentService.findTopRatedAds();
+    }
+
+    @Get("criminal-proof")
+    async getCriminalRecordProofAds() {
+        return this.advertismentService.findByCriminalRecordProof();
+    }
+
     @Get(":id")
     async getAdvertismentById(@Param("id") id: number){
         return this.advertismentService.findById(id);
@@ -26,6 +36,11 @@ export class AdvertismentController {
     async getAdvertismentByUserId(@Param("id") id: number){
         console.log("GETTT",id);
         return this.advertismentService.findByUserId(id);
+    }
+
+    @Get("followed/:userId")
+    async getFollowedAdvertisments(@Param("userId") userId: number) {
+        return this.advertismentService.findByFollowedUsers(userId);
     }
 
     @Patch(":id")

@@ -8,16 +8,18 @@ import { selectToken } from '../../store/auth/auth.selectors';
 import { AdvertismentComponent } from "../advertisment/advertisment.component";
 import { AdvertismentListComponent } from '../advertisment-list/advertisment-list.component';
 import { selectUser } from '../../store/user/user.selectors';
+import { Observable } from 'rxjs';
+import { User } from '../../store/advertisment/advertisment.state';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, NavbarComponent, AdvertismentComponent, AdvertismentListComponent],
   template: `
-  <div class="home-container">
+   <div class="home-container">
     <app-navbar></app-navbar>
     <app-advertisment></app-advertisment>
-    <app-advertisment-list></app-advertisment-list>
+    <app-advertisment-list [user]="user$ | async"></app-advertisment-list>
   </div>
   `,
   styles: [
@@ -54,20 +56,23 @@ import { selectUser } from '../../store/user/user.selectors';
   ],
 })
 export class HomeComponent {
-  constructor(private store: Store, private router: Router) {}
+  user$: Observable<User>;
 
- 
+  constructor(private store: Store, private router: Router) {
+    this.user$ = this.store.select(selectUser); // Selektujemo korisnika jednom i prosleđujemo
+  }
+
   ngOnInit(): void {
-      this.store.select(selectToken).subscribe(token => {
-        if (token) {
-          this.store.select(selectUser).subscribe(user => {
-            if (user?.userType === 'admin') {
-              this.router.navigate(['/admin']);
-            } else {
-              this.router.navigate(['/home']);
-            }
-          });
-        }
-      });
-    }
+    this.store.select(selectToken).subscribe(token => {
+      if (token) {
+        this.user$.subscribe(user => {
+          if (user?.userType === 'admin') {
+            this.router.navigate(['/admin']);
+          } else {
+            this.router.navigate(['/home']);
+          }
+        });
+      }
+    });
+  }
 }

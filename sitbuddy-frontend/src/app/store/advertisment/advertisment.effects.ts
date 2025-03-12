@@ -32,6 +32,46 @@ export class AdvertismentEffects {
     )
   );
 
+  
+loadFollowedAdvertisments$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(AdvertismentActions.loadFollowedAdvertisments),
+    mergeMap((action) =>
+      this.advertismentService.getFollowedAdvertisments(action.userId).pipe(
+        map((advertisments) => AdvertismentActions.loadFollowedAdvertismentsSuccess({ advertisments })),
+        catchError((error) => of(AdvertismentActions.loadFollowedAdvertismentsFailure({ error: error.message })))
+      )
+    )
+  )
+);
+
+
+loadTopRatedAdvertisments$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(AdvertismentActions.loadTopRatedAdvertisments),
+    mergeMap(() =>
+      this.advertismentService.getTopRatedAdvertisments().pipe(
+        map((advertisments) => AdvertismentActions.loadTopRatedAdvertismentsSuccess({ advertisments })),
+        catchError((error) => of(AdvertismentActions.loadTopRatedAdvertismentsFailure({ error: error.message })))
+      )
+    )
+  )
+);
+
+
+loadCriminalProofAdvertisments$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(AdvertismentActions.loadCriminalProofAdvertisments),
+    mergeMap(() =>
+      this.advertismentService.getCriminalProofAdvertisments().pipe(
+        map((advertisments) => AdvertismentActions.loadCriminalProofAdvertismentsSuccess({ advertisments })),
+        catchError((error) => of(AdvertismentActions.loadCriminalProofAdvertismentsFailure({ error: error.message })))
+      )
+    )
+  )
+);
+
+
   createAdvertisment$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AdvertismentActions.createAdvertisment),

@@ -53,5 +53,33 @@ export const advertismentReducer = createReducer(
     userAdvertisment: null,
     loading: false,
   })),
-  on(AdvertismentActions.deleteAdvertismentFailure, (state, { error }) => ({ ...state, loading: false, error }))
+  on(AdvertismentActions.deleteAdvertismentFailure, (state, { error }) => ({ ...state, loading: false, error })),
+
+  // Oglasi korisnika koje korisnik prati
+on(AdvertismentActions.loadFollowedAdvertisments, (state) => ({ ...state, loading: true, error: null })),
+on(AdvertismentActions.loadFollowedAdvertismentsSuccess, (state, { advertisments }) => ({
+  ...state,
+  advertisments,
+  loading: false,
+})),
+on(AdvertismentActions.loadFollowedAdvertismentsFailure, (state, { error }) => ({ ...state, loading: false, error })),
+
+// Najbolje ocenjeni oglasi
+on(AdvertismentActions.loadTopRatedAdvertisments, (state) => ({ ...state, loading: true, error: null })),
+on(AdvertismentActions.loadTopRatedAdvertismentsSuccess, (state, { advertisments }) => ({
+  ...state,
+  advertisments,
+  loading: false,
+})),
+on(AdvertismentActions.loadTopRatedAdvertismentsFailure, (state, { error }) => ({ ...state, loading: false, error })),
+
+// Oglasi korisnika sa potvrdom o neosuđivanosti
+on(AdvertismentActions.loadCriminalProofAdvertisments, (state) => ({ ...state, loading: true, error: null })),
+on(AdvertismentActions.loadCriminalProofAdvertismentsSuccess, (state, { advertisments }) => ({
+  ...state,
+  advertisments,
+  loading: false,
+})),
+on(AdvertismentActions.loadCriminalProofAdvertismentsFailure, (state, { error }) => ({ ...state, loading: false, error })),
+
 );

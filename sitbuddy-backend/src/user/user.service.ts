@@ -1,10 +1,14 @@
 import * as bcrypt from 'bcrypt';
 import { ConflictException, forwardRef, Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ILike, Like, Repository } from "typeorm";
+import { ILike, IsNull, Like, Not, Repository } from "typeorm";
 import { User, UserType } from "./user.entity";
 import { CreateUserDto, UpdateUserDto } from "./user.dto";
 import { ReviewService } from "src/review/review.service";
+
+interface UserWithRating extends User {
+  averageRating: number;
+}
 
 @Injectable()
 export class UserService {
@@ -43,19 +47,29 @@ export class UserService {
     return users;
   }
 
-  async getSitters(): Promise<User[]> {
-    const sitters = await this.userRepository.find({ where: { userType: UserType.SITTER } });
-  
-    const sittersWithRatings = await Promise.all(
-      sitters.map(async (sitter) => {
-        const averageRating = await this.calculateAverageRating(sitter.id);
-        return { ...sitter, averageRating };
-      })
+  async getSitters(): Promise<UserWithRating[]> {
+    const sitters = await this.userRepository.find({ 
+        where: { userType: UserType.SITTER },
+        relations: ["advertisment"] // Učitaj povezane oglase
+    });
+
+    const sittersWithRatings: UserWithRating[] = await Promise.all(
+        sitters.map(async (sitter) => {
+            const averageRating = await this.calculateAverageRating(sitter.id);
+            return { ...sitter, averageRating };
+        })
     );
-  
+
     return sittersWithRatings;
-  }
-  
+}
+
+
+async findUsersWithCriminalRecordProof(): Promise<User[]> {
+   const users= await this.userRepository.find({ where: { criminalRecordProof: Not(IsNull()) } });
+   console.log("KORSINICI", users);
+   return users;
+}
+
 
   async findByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { email } }); // Tražimo korisnika po email-u
