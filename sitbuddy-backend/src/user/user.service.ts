@@ -1,10 +1,15 @@
 import * as bcrypt from 'bcrypt';
-import { ConflictException, forwardRef, Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ConflictException, forwardRef, Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ILike, IsNull, Like, Not, Repository } from "typeorm";
 import { User, UserType } from "./user.entity";
 import { CreateUserDto, UpdateUserDto } from "./user.dto";
 import { ReviewService } from "src/review/review.service";
+import * as Tesseract from 'tesseract.js';
+import { existsSync } from 'fs';
+import { join } from 'path';
+import { ConfigService } from '@nestjs/config';
+
 
 interface UserWithRating extends User {
   averageRating: number;
@@ -17,6 +22,7 @@ export class UserService {
     private userRepository: Repository<User>,
     @Inject(forwardRef(() => ReviewService))
     private reviewService: ReviewService,
+    private configService: ConfigService
   ) {}
 
   
@@ -119,11 +125,49 @@ async findUsersWithCriminalRecordProof(): Promise<User[]> {
     return this.userRepository.save(user);
   }
 
-  async updateCriminalRecord(userId: number, filename: string): Promise<User> {
-    const user = await this.findById(userId);
-    user.criminalRecordProof = filename;
-    return this.userRepository.save(user);
+  async analyzeCriminalRecord(filename: string): Promise<boolean> {
+    const filePath = join(this.configService.get<string>('CRIMINAL_RECORDS_PATH'), filename);
+
+    if (!existsSync(filePath)) {
+        console.error("❌ Fajl ne postoji:", filePath);
+        return false;
+    }
+
+    console.log("🔍 OCR analiza fajla:", filePath);
+
+    try {
+        const { data } = await Tesseract.recognize(filePath, 'srp', {
+            logger: (m) => console.log(m), // Log progres OCR-a
+        });
+
+        const extractedText = data.text.toLowerCase();
+        console.log("📜 Izvučen tekst:", extractedText);
+
+        // Proveravamo ključne fraze
+        const valid = extractedText.includes("није покренут кривични поступак") || extractedText.includes("није покренута истрага");
+
+        if (!valid) {
+            console.error("⚠️ Dokument nije validan: ne sadrži ključne fraze.");
+        }
+
+        return valid;
+    } catch (error) {
+        console.error("❌ Greška pri OCR analizi:", error);
+        return false;
+    }
+}
+
+async updateCriminalRecord(userId: number, filename: string): Promise<User> {
+  const isValid = await this.analyzeCriminalRecord(filename);
+  
+  if (!isValid) {
+      throw new BadRequestException("❌ Uverenje nije validno! Molimo Vas da pokušate ponovo sa ispravnim dokumentom.");
   }
+
+  const user = await this.findById(userId);
+  user.criminalRecordProof = filename;
+  return this.userRepository.save(user);
+}
 
   async deleteCriminalProof(userId: number): Promise<User> {
     console.log('Pokušaj brisanja slike potvrde:', userId);

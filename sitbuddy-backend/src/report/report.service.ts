@@ -7,6 +7,7 @@ import { AdvertismentService } from 'src/advertisment/advertisment.service';
 import { ReviewService } from 'src/review/review.service';
 import { CreateReportDto } from './report.dto';
 import { ReportType } from './report.entity';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class ReportService {
@@ -15,27 +16,33 @@ export class ReportService {
     private reportRepository: Repository<Report>,
     private userService: UserService,
     private advertismentService: AdvertismentService,
-    private reviewService: ReviewService
+    private reviewService: ReviewService,
+    private mailService: MailService,
   ) {}
 
   async create(createReportDto: CreateReportDto): Promise<Report> {
-    const { reportedById, type, reportedUserId, reportedAdvertismentId, reportedReviewId, reason } = createReportDto;
+    const { type, reportedUserId, reportedAdvertismentId, reportedReviewId, reason } = createReportDto;
 
     let reportedUser, reportedAdvertisment, reportedReview;
+    let reportedEmail: string | null = null;
 
     if (type === ReportType.USER) {
       if (!reportedUserId) throw new BadRequestException('Nedostaje ID prijavljenog korisnika.');
       reportedUser = await this.userService.findById(reportedUserId);
+      reportedEmail = reportedUser.email;
     }
 
     if (type === ReportType.ADVERTISMENT) {
       if (!reportedAdvertismentId) throw new BadRequestException('Nedostaje ID prijavljenog oglasa.');
       reportedAdvertisment = await this.advertismentService.findById(reportedAdvertismentId);
+      reportedEmail = reportedAdvertisment.adFrom.email;
     }
 
     if (type === ReportType.REVIEW) {
       if (!reportedReviewId) throw new BadRequestException('Nedostaje ID prijavljene recenzije.');
       reportedReview = await this.reviewService.findById(reportedReviewId);
+      console.log("PRIJAVLJEN REVIEW", reportedReview);
+      reportedEmail = reportedReview.reviewFrom.email;
     }
 
     const report = this.reportRepository.create({
@@ -46,8 +53,16 @@ export class ReportService {
       reason,
     });
 
-    return this.reportRepository.save(report);
+    const savedReport = await this.reportRepository.save(report);
+
+    // Ako postoji email prijavljenog korisnika, šaljemo mu obaveštenje
+    if (reportedEmail) {
+      await this.mailService.sendReportNotification(reportedEmail, type, reason);
+    }
+
+    return savedReport;
   }
+
 
   async findAll(): Promise<Report[]> {
     return this.reportRepository.find();

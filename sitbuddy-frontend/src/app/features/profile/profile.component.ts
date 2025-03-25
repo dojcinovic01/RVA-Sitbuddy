@@ -164,19 +164,30 @@ export class ProfileComponent implements OnInit {
   uploadFile(file: File, type: 'profilePicture' | 'criminalRecordProof') {
     this.user$.pipe(take(1)).subscribe(user => {
       if (!user) return;
+      
       const formData = new FormData();
       formData.append('file', file);
       formData.append('userId', user.id.toString());
+      
       const uploadService = type === 'profilePicture' 
         ? this.userService.uploadProfilePicture(formData)
         : this.userService.uploadCriminalRecord(formData);
       
       uploadService.subscribe({
         next: () => this.store.dispatch(loadUser({ userId: user.id })),
-        error: (error) => console.error(`Greška pri uploadu ${type}:`, error)
+        error: (error) => {
+          console.error(`Greška pri uploadu ${type}:`, error);
+          
+          if (error.status === 400) {
+            alert(error.error.message || "Uverenje nije validno! Pokušajte ponovo.");
+          } else {
+            alert("Došlo je do greške! Molimo Vas pokušajte ponovo.");
+          }
+        }
       });
     });
   }
+  
 
   OpenCriminalProof() {
     this.profileUser$.pipe(take(1)).subscribe(profileUser => {

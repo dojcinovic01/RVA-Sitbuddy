@@ -9,12 +9,14 @@ import { ValidationPipe } from "@nestjs/common";
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import 'reflect-metadata';
+import { ConfigService } from '@nestjs/config';
 
 
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  const uploadsPath = 'D:/VI semestar/RVA/uploads/profile-pictures';
+  const configService = app.get(ConfigService);
+  const uploadsPath = configService.get<string>('PROFILE_PICTURES_PATH');
 
   app.useStaticAssets(uploadsPath, {
     prefix: '/uploads/profile-pictures',
@@ -22,7 +24,7 @@ async function bootstrap() {
   
   console.log('Serving static files from:', uploadsPath);
 
-  const criminalRecordsPath = 'D:/VI semestar/RVA/uploads/criminal-records';
+  const criminalRecordsPath = configService.get<string>('CRIMINAL_RECORDS_PATH');
 
   app.useStaticAssets(criminalRecordsPath, {
     prefix: '/uploads/criminal-records',
