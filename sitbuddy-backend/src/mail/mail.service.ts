@@ -5,38 +5,39 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class MailService {
   private transporter: nodemailer.Transporter;
+  private readonly gmailUser: string;
 
   constructor(private configService: ConfigService) {
-    const gmailUser = configService.get<string>('GMAIL_USER');
-    const gmailPassword = configService.get<string>('GMAIL_PASS');
-    this.transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true, // true za port 465, false za 587
-        auth: {
-          user: gmailUser,
-          pass: gmailPassword,
-        },
-        tls: {
-            rejectUnauthorized: false, // 🔥 Ignoriše verifikaciju sertifikata
-          },
-      });
-      
+    this.gmailUser = this.configService.get<string>('GMAIL_USER')!;
+    this.initTransporter();
   }
 
-  async sendReportNotification(email: string, reportType: string, reason: string) {
-    const typeMap = {
-        user: 'nalog',
-        advertisment: 'oglas',
-        review: 'recenzija',
-      };
-  
-      const localizedType = typeMap[reportType] || 'sadržaj';
-      const subject = `Upozorenje: Prijavljen(a) ${localizedType}`;
-      const text = `Vaš(a) ${localizedType} je prijavljen(a) iz sledećeg razloga: ${reason}. Ukoliko je sadržaj uvredljiv, biće obrisan.`;
-  
+  private initTransporter() {
+    this.transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: this.gmailUser,
+        pass: this.configService.get<string>('GMAIL_PASS'),
+      },
+      tls: { rejectUnauthorized: false },
+    });
+  }
+
+  async sendReportNotification(email: string, reportType: string, reason: string): Promise<void> {
+    const typeMap: Record<string, string> = {
+      user: 'nalog',
+      advertisment: 'oglas',
+      review: 'recenzija',
+    };
+
+    const localizedType = typeMap[reportType] || 'sadržaj';
+    const subject = `Upozorenje: Prijavljen(a) ${localizedType}`;
+    const text = `Vaš(a) ${localizedType} je prijavljen(a) iz sledećeg razloga: ${reason}. Ukoliko je sadržaj uvredljiv, biće obrisan.`;
+
     await this.transporter.sendMail({
-      from: this.configService.get<string>('GMAIL_USER'),
+      from: this.gmailUser,
       to: email,
       subject,
       text,

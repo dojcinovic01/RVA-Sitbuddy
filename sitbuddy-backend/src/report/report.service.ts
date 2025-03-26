@@ -1,12 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Report } from './report.entity';
+import { Report, ReportType } from './report.entity';
 import { UserService } from 'src/user/user.service';
 import { AdvertismentService } from 'src/advertisment/advertisment.service';
 import { ReviewService } from 'src/review/review.service';
 import { CreateReportDto } from './report.dto';
-import { ReportType } from './report.entity';
 import { MailService } from '../mail/mail.service';
 
 @Injectable()
@@ -23,26 +22,27 @@ export class ReportService {
   async create(createReportDto: CreateReportDto): Promise<Report> {
     const { type, reportedUserId, reportedAdvertismentId, reportedReviewId, reason } = createReportDto;
 
-    let reportedUser, reportedAdvertisment, reportedReview;
+    let reportedUser = null;
+    let reportedAdvertisment = null;
+    let reportedReview = null;
     let reportedEmail: string | null = null;
 
-    if (type === ReportType.USER) {
-      if (!reportedUserId) throw new BadRequestException('Nedostaje ID prijavljenog korisnika.');
-      reportedUser = await this.userService.findById(reportedUserId);
-      reportedEmail = reportedUser.email;
-    }
-
-    if (type === ReportType.ADVERTISMENT) {
-      if (!reportedAdvertismentId) throw new BadRequestException('Nedostaje ID prijavljenog oglasa.');
-      reportedAdvertisment = await this.advertismentService.findById(reportedAdvertismentId);
-      reportedEmail = reportedAdvertisment.adFrom.email;
-    }
-
-    if (type === ReportType.REVIEW) {
-      if (!reportedReviewId) throw new BadRequestException('Nedostaje ID prijavljene recenzije.');
-      reportedReview = await this.reviewService.findById(reportedReviewId);
-      console.log("PRIJAVLJEN REVIEW", reportedReview);
-      reportedEmail = reportedReview.reviewFrom.email;
+    switch (type) {
+      case ReportType.USER:
+        if (!reportedUserId) throw new BadRequestException('Nedostaje ID prijavljenog korisnika.');
+        reportedUser = await this.userService.findById(reportedUserId);
+        reportedEmail = reportedUser.email;
+        break;
+      case ReportType.ADVERTISMENT:
+        if (!reportedAdvertismentId) throw new BadRequestException('Nedostaje ID prijavljenog oglasa.');
+        reportedAdvertisment = await this.advertismentService.findById(reportedAdvertismentId);
+        reportedEmail = reportedAdvertisment.adFrom.email;
+        break;
+      case ReportType.REVIEW:
+        if (!reportedReviewId) throw new BadRequestException('Nedostaje ID prijavljene recenzije.');
+        reportedReview = await this.reviewService.findById(reportedReviewId);
+        reportedEmail = reportedReview.reviewFrom.email;
+        break;
     }
 
     const report = this.reportRepository.create({
@@ -55,7 +55,6 @@ export class ReportService {
 
     const savedReport = await this.reportRepository.save(report);
 
-    // Ako postoji email prijavljenog korisnika, šaljemo mu obaveštenje
     if (reportedEmail) {
       await this.mailService.sendReportNotification(reportedEmail, type, reason);
     }
@@ -63,8 +62,7 @@ export class ReportService {
     return savedReport;
   }
 
-
-  async findAll(): Promise<Report[]> {
+  findAll(): Promise<Report[]> {
     return this.reportRepository.find();
   }
 
@@ -74,10 +72,13 @@ export class ReportService {
     return report;
   }
 
-  async findByType(type: ReportType): Promise<Report[]> {
-    return this.reportRepository.find({ where: { type }, relations: ['reportedUser', 'reportedAdvertisment', 'reportedReview'] });
+  findByType(type: ReportType): Promise<Report[]> {
+    return this.reportRepository.find({
+      where: { type },
+      relations: ['reportedUser', 'reportedAdvertisment', 'reportedReview'],
+    });
   }
-  
+
   async delete(id: number): Promise<{ message: string }> {
     const report = await this.findById(id);
     await this.reportRepository.remove(report);
@@ -86,8 +87,7 @@ export class ReportService {
 
   async deleteReportedContent(id: number): Promise<{ message: string }> {
     const report = await this.findById(id);
-  
-    console.log('REPORT->', report);
+
     if (report.reportedUser) {
       await this.userService.delete(report.reportedUser.id);
     } else if (report.reportedAdvertisment) {
@@ -95,10 +95,8 @@ export class ReportService {
     } else if (report.reportedReview) {
       await this.reviewService.delete(report.reportedReview.id);
     }
-  
+
     await this.reportRepository.remove(report);
-  
     return { message: `Prijava i prijavljeni sadržaj su uspešno obrisani.` };
   }
-  
 }

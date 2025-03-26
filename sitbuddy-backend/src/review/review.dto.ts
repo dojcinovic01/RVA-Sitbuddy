@@ -21,13 +21,13 @@ export class CreateReviewDto {
 }
 
 export class UpdateReviewDto {
-  @IsString()
   @IsOptional()
-  comment: string;
+  @IsString()
+  comment?: string;
 
+  @IsOptional()
   @IsNumber()
   @Min(1)
   @Max(5)
-  @IsOptional()
-  rating: number;
+  rating?: number;
 }

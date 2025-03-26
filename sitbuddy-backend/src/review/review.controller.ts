@@ -6,30 +6,28 @@ import { CreateReviewDto, UpdateReviewDto } from './review.dto';
 export class ReviewController {
     constructor(private readonly reviewService: ReviewService) {}
 
-    // Endpoint za kreiranje recenzije
     @Post("write")
-    async writeReview (@Body () createReviewDto : CreateReviewDto){
+    async writeReview(@Body() createReviewDto: CreateReviewDto) {
         return this.reviewService.create(createReviewDto);
     }
 
     @Get("allReviews")
-    async getAllReviews(){
+    async getAllReviews() {
         return this.reviewService.findAll();
     }
 
     @Get("user/:id")
-    async getReviewsForUser(@Param("id") id: number){
+    async getReviewsForUser(@Param("id") id: number) {
         return this.reviewService.findForUser(id);
     }
 
     @Delete(":id")
-    async deleteReview(@Param("id") id: number, @Query("userId") userId: number) {
-        return this.reviewService.delete(id, Number(userId));
+    async deleteReview(@Param("id") id: number, @Query("userId") userId?: number) {
+        return this.reviewService.delete(id, userId ? Number(userId) : undefined);
     }
 
-    
     @Patch(":id")
-    async updateReview(@Param("id") id: number, @Body() updateReviewDto: UpdateReviewDto){
+    async updateReview(@Param("id") id: number, @Body() updateReviewDto: UpdateReviewDto) {
         return this.reviewService.update(id, updateReviewDto);
     }
 }

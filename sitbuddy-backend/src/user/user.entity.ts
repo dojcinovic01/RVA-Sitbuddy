@@ -1,7 +1,7 @@
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne } from "typeorm";
 import { Advertisment } from "src/advertisment/advertisment.entity";
 import { Follow } from "src/follow/follow.entity";
 import { Review } from "src/review/review.entity";
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne } from "typeorm";
 import { Report } from "src/report/report.entity";
 
 export enum UserType {
@@ -24,10 +24,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({
-    type: 'enum',
-    enum: UserType
-  })
+  @Column({ type: 'enum', enum: UserType })
   userType: UserType; 
 
   @OneToMany(() => Review, (review) => review.reviewFrom)
@@ -45,24 +42,15 @@ export class User {
   @OneToMany(() => Follow, (follow) => follow.following)
   followers: Follow[]; 
 
-  @Column({ nullable: true })
-  profilePicture: string; 
-
-  @Column({ nullable: true })
-  location: string; // Exact address or coordinates (e.g., "Kneginje Ljubice 4 19/a")
-
-  @Column({ nullable: true })
-  phoneNumber: string; 
-
-  @Column({ nullable: true })
-  criminalRecordProof: string; 
-
-  @Column({ nullable: true })
-  hourlyRate: number; 
+  @Column({ nullable: true }) profilePicture: string; 
+  @Column({ nullable: true }) location: string;
+  @Column({ nullable: true }) phoneNumber: string; 
+  @Column({ nullable: true }) criminalRecordProof: string; 
+  @Column({ nullable: true }) hourlyRate: number; 
 
   @OneToMany(() => Report, (report) => report.reportedBy)
-  reportsFiled: Report[]; // Prijave koje je korisnik podneo
+  reportsFiled: Report[]; 
 
   @OneToMany(() => Report, (report) => report.reportedUser)
-  reportsReceived: Report[]; // Prijave protiv korisnika
+  reportsReceived: Report[]; 
 }

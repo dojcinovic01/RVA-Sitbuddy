@@ -14,24 +14,24 @@ export class Report {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.id, { eager: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => User, { eager: true, onDelete: 'CASCADE' })
   reportedBy: User; // Korisnik koji je poslao prijavu
 
   @ManyToOne(() => User, { nullable: true, eager: true, onDelete: 'CASCADE' })
-  reportedUser?: User; // Prijavljeni korisnik (ako je tip prijave USER)
+  reportedUser?: User; // Prijavljeni korisnik
 
   @ManyToOne(() => Advertisment, { nullable: true, eager: true, onDelete: 'CASCADE' })
-  reportedAdvertisment?: Advertisment; // Prijavljeni oglas (ako je tip prijave ADVERTISMENT)
+  reportedAdvertisment?: Advertisment; // Prijavljeni oglas
 
   @ManyToOne(() => Review, { nullable: true, eager: true, onDelete: 'CASCADE' })
-  reportedReview?: Review; // Prijavljena recenzija (ako je tip prijave REVIEW)
+  reportedReview?: Review; // Prijavljena recenzija
 
   @Column({ type: 'enum', enum: ReportType })
-  type: ReportType; // Tip prijave (user, advertisment, review)
+  type: ReportType; // Tip prijave
 
   @Column()
   reason: string; // Razlog prijave
 
   @CreateDateColumn()
-  createdAt: Date; // Datum kada je prijava napravljena
+  createdAt: Date; // Datum kreiranja prijave
 }

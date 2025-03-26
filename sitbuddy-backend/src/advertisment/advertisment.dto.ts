@@ -17,9 +17,9 @@ export class CreateAdvertismentDto {
 export class UpdateAdvertismentDto {
   @IsString()
   @IsOptional()
-  title: string;
+  title?: string;
 
   @IsString()
-  @IsNotEmpty()
-  description: string;
+  @IsOptional()
+  description?: string;
 }

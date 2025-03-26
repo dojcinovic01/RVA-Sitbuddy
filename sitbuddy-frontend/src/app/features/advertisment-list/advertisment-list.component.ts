@@ -28,9 +28,9 @@ export class AdvertismentListComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(AdvertismentActions.loadAdvertisments());
-    // this.advertisments$.subscribe(advertisments => {
-    //   console.log('Trenutni oglasi:', advertisments);
-    // });
+    this.advertisments$.subscribe(advertisments => {
+      console.log('Trenutni oglasi:', advertisments);
+    });
   }
 
   loadAllAds(): void {

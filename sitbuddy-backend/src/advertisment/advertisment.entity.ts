@@ -2,7 +2,6 @@ import { User } from "src/user/user.entity";
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn, OneToMany } from "typeorm";
 import { Report } from "src/report/report.entity";
 
-
 @Entity()
 export class Advertisment {
   @PrimaryGeneratedColumn()
@@ -19,6 +18,5 @@ export class Advertisment {
   adFrom: User;
 
   @OneToMany(() => Report, (report) => report.reportedAdvertisment)
-  reports: Report[]; // Prijave vezane za ovaj oglas
-
+  reports: Report[];
 }

@@ -7,9 +7,9 @@ import { ReviewModule } from 'src/review/review.module';
 import { AdvertismentModule } from 'src/advertisment/advertisment.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), forwardRef(() => ReviewModule), forwardRef(() => AdvertismentModule)], // Registruje User entitet za rad sa bazom
+  imports: [TypeOrmModule.forFeature([User]), forwardRef(() => ReviewModule), forwardRef(() => AdvertismentModule)], 
   controllers: [UserController],
   providers: [UserService],
-  exports: [UserService], // Omogućava deljenje UserService-a sa drugim modulima
+  exports: [UserService], 
 })
 export class UserModule {}
