@@ -11,9 +11,6 @@ import {
   loadFollowing,
   loadFollowingSuccess,
   loadFollowingFailure,
-  loadFollowers,
-  loadFollowersSuccess,
-  loadFollowersFailure,
 } from './follow.actions';
 import { catchError, map, mergeMap, of } from 'rxjs';
 

@@ -8,52 +8,47 @@ import * as ReviewActions from './review.actions';
 export class ReviewEffects {
     constructor(private actions$: Actions, private reviewService: ReviewService) {}
 
-    loadReviews$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(ReviewActions.loadReviews),
-            mergeMap((action) =>
-                this.reviewService.getReviewsForUser(action.userId).pipe(
-                    map((reviews) => ReviewActions.loadReviewsSuccess({ reviews })),
-                    catchError((error) => of(ReviewActions.loadReviewsFailure({ error: error.message })))
-                )
-            )
-        )
-    );
+    private handleError(action: any) {
+        return catchError(error => of(action({ error: error.message })));
+    }
 
-    addReview$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(ReviewActions.addReview),
-            mergeMap(({ review }) =>
-                this.reviewService.createReview(review).pipe(
-                    map((newReview) => ReviewActions.addReviewSuccess({ review: newReview })),
-                    catchError((error) => of(ReviewActions.addReviewFailure({ error: error.message })))
-                )
+    loadReviews$ = createEffect(() => this.actions$.pipe(
+        ofType(ReviewActions.loadReviews),
+        mergeMap(({ userId }) =>
+            this.reviewService.getReviewsForUser(userId).pipe(
+                map(reviews => ReviewActions.loadReviewsSuccess({ reviews })),
+                this.handleError(ReviewActions.loadReviewsFailure)
             )
         )
-    );
-    
-    updateReview$ = createEffect(() => 
-        this.actions$.pipe(
-            ofType(ReviewActions.updateReview),
-            mergeMap(({review}) =>
-                this.reviewService.updateReview(review).pipe(
-                    map((updatedReview) => ReviewActions.updateReviewSuccess({ review: updatedReview })),
-                    catchError((error) => of(ReviewActions.updateReviewFailure({ error: error.message })))
-                )
-            )
-        )
-    );
+    ));
 
-    deleteReview$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(ReviewActions.deleteReview),
-            mergeMap((action) =>
-                this.reviewService.deleteReview(action.reviewId, action.reviewFromId).pipe(
-                    map(() => ReviewActions.deleteReviewSuccess({ id: action.reviewId })),
-                    catchError((error) => of(ReviewActions.deleteReviewFailure({ error: error.message })))
-                )
+    addReview$ = createEffect(() => this.actions$.pipe(
+        ofType(ReviewActions.addReview),
+        mergeMap(({ review }) =>
+            this.reviewService.createReview(review).pipe(
+                map(newReview => ReviewActions.addReviewSuccess({ review: newReview })),
+                this.handleError(ReviewActions.addReviewFailure)
             )
         )
-    );
-    
+    ));
+
+    updateReview$ = createEffect(() => this.actions$.pipe(
+        ofType(ReviewActions.updateReview),
+        mergeMap(({ review }) =>
+            this.reviewService.updateReview(review).pipe(
+                map(updatedReview => ReviewActions.updateReviewSuccess({ review: updatedReview })),
+                this.handleError(ReviewActions.updateReviewFailure)
+            )
+        )
+    ));
+
+    deleteReview$ = createEffect(() => this.actions$.pipe(
+        ofType(ReviewActions.deleteReview),
+        mergeMap(({ reviewId, reviewFromId }) =>
+            this.reviewService.deleteReview(reviewId, reviewFromId).pipe(
+                map(() => ReviewActions.deleteReviewSuccess({ id: reviewId })),
+                this.handleError(ReviewActions.deleteReviewFailure)
+            )
+        )
+    ));
 }

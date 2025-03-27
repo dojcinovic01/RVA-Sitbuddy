@@ -8,21 +8,18 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AdvertismentService {
-  private apiUrl = `${environment.apiUrl}/advertisment`;
+  private readonly apiUrl = `${environment.apiUrl}/advertisment`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
-  // Dohvatanje svih oglasa
   getAll(): Observable<Advertisment[]> {
     return this.http.get<Advertisment[]>(`${this.apiUrl}/allAdvertisments`);
   }
 
-  // Dohvatanje oglasa po ID-u
   getById(id: number): Observable<Advertisment> {
     return this.http.get<Advertisment>(`${this.apiUrl}/${id}`);
   }
 
-  // Dohvatanje oglasa po korisniku
   getByUserId(userId: number): Observable<Advertisment | null> {
     return this.http.get<Advertisment | null>(`${this.apiUrl}/user/${userId}`);
   }
@@ -30,27 +27,23 @@ export class AdvertismentService {
   getFollowedAdvertisments(userId: number): Observable<Advertisment[]> {
     return this.http.get<Advertisment[]>(`${this.apiUrl}/followed/${userId}`);
   }
-  
-  getTopRatedAdvertisments() : Observable<Advertisment[]> {
-    return this.http.get<Advertisment[]> (`${this.apiUrl}/top-rated`);
+
+  getTopRatedAdvertisments(): Observable<Advertisment[]> {
+    return this.http.get<Advertisment[]>(`${this.apiUrl}/top-rated`);
   }
-  
-  getCriminalProofAdvertisments() :  Observable<Advertisment[]>{
+
+  getCriminalProofAdvertisments(): Observable<Advertisment[]> {
     return this.http.get<Advertisment[]>(`${this.apiUrl}/criminal-proof`);
   }
-  
 
-  // Kreiranje oglasa
   create(advertisment: Omit<Advertisment, 'id'>): Observable<Advertisment> {
     return this.http.post<Advertisment>(`${this.apiUrl}/create`, advertisment);
   }
 
-  // Ažuriranje oglasa
   update(id: number, advertisment: Partial<Advertisment>): Observable<Advertisment> {
     return this.http.patch<Advertisment>(`${this.apiUrl}/${id}`, advertisment);
   }
 
-  // Brisanje oglasa
   delete(id: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
   }

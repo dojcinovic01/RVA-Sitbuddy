@@ -15,51 +15,14 @@ import { User } from '../../store/advertisment/advertisment.state';
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, NavbarComponent, AdvertismentComponent, AdvertismentListComponent],
-  template: `
-   <div class="home-container">
-    <app-navbar></app-navbar>
-    <app-advertisment></app-advertisment>
-    <app-advertisment-list [user]="user$ | async"></app-advertisment-list>
-  </div>
-  `,
-  styles: [
-    `
-      .home-container {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        background:rgb(255, 255, 255);
-      }
-
-      .homePage {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 20px;
-        color: white;
-      }
-
-      h1 {
-        font-size: 32px;
-        margin-bottom: 10px;
-        text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.2);
-      }
-
-      p {
-        font-size: 18px;
-        opacity: 0.9;
-      }
-    `,
-  ],
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
   user$: Observable<User>;
 
   constructor(private store: Store, private router: Router) {
-    this.user$ = this.store.select(selectUser); // Selektujemo korisnika jednom i prosleđujemo
+    this.user$ = this.store.select(selectUser);
   }
 
   ngOnInit(): void {

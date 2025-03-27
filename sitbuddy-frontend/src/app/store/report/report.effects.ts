@@ -13,8 +13,8 @@ export class ReportEffects {
       ofType(ReportActions.loadReports),
       mergeMap(({ reportType }) =>
         this.reportService.getReportsByType(reportType).pipe(
-          map((reports) => ReportActions.loadReportsSuccess({ reports })),
-          catchError((error) => of(ReportActions.loadReportsFailure({ error: error.message })))
+          map(reports => ReportActions.loadReportsSuccess({ reports })),
+          catchError(error => of(ReportActions.loadReportsFailure({ error: error.message })))
         )
       )
     )
@@ -26,7 +26,7 @@ export class ReportEffects {
       mergeMap(({ reportId }) =>
         this.reportService.deleteReport(reportId).pipe(
           map(() => ReportActions.deleteReportSuccess({ reportId })),
-          catchError((error) => of(ReportActions.deleteReportFailure({ error: error.message })))
+          catchError(error => of(ReportActions.deleteReportFailure({ error: error.message })))
         )
       )
     )
@@ -35,12 +35,12 @@ export class ReportEffects {
   deleteReportedContent$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ReportActions.deleteReportedContent),
-      mergeMap(({ report }) => {
-        return this.reportService.deleteReportedContent(report.id).pipe(
+      mergeMap(({ report }) =>
+        this.reportService.deleteReportedContent(report.id).pipe(
           map(() => ReportActions.deleteReportSuccess({ reportId: report.id })),
-          catchError((error) => of(ReportActions.deleteReportFailure({ error: error.message })))
-        );
-      })
+          catchError(error => of(ReportActions.deleteReportFailure({ error: error.message })))
+        )
+      )
     )
   );
 }

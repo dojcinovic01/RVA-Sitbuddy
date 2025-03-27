@@ -1,1 +1,64 @@
-<p>admin-dashboard works!</p>
+<app-navbar></app-navbar>
+  <div class="dashboard-container">
+    <h1>Admin Dashboard</h1>
+    
+    <nav class="tabs">
+      <button [class.active]="activeTab === 'profiles'" (click)="setActiveTab('profiles')">Profili</button>
+      <button [class.active]="activeTab === 'ads'" (click)="setActiveTab('ads')">Oglasi</button>
+      <button [class.active]="activeTab === 'reviews'" (click)="setActiveTab('reviews')">Recenzije</button>
+    </nav>
+
+    <div *ngIf="activeTab === 'profiles'">
+      <h2>Prijavljeni Profili</h2>
+      <div class="loading" *ngIf="loading$ | async">Učitavanje...</div>
+      <div class="error" *ngIf="error$ | async as error">❌ {{ error }}</div>
+      <div class="reports-container">
+        <div class="report-card" *ngFor="let report of reports$ | async">
+          <p>Razlog prijave: <strong>{{ report.reason }}</strong></p>
+          <p>
+            Korisnik: 
+            <span class="profile-link" (click)="navigateToProfile(report.reportedUser?.id)">
+              {{ report.reportedUser?.fullName }}
+            </span>
+          </p>
+          <div class="actions">
+            <button class="delete" (click)="removeReport(report.id)">Obriši prijavu</button>
+            <button class="warn" (click)="removeReportedContent(report)">Obriši prijavljeni sadržaj</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'ads'">
+      <h2>Prijavljeni Oglasi</h2>
+      <div class="loading" *ngIf="loading$ | async">Učitavanje...</div>
+      <div class="error" *ngIf="error$ | async as error">❌ {{ error }}</div>
+      <div class="reports-container">
+        <div class="report-card" *ngFor="let report of reports$ | async">
+          <p>Razlog prijave: <strong>{{ report.reason }}</strong></p>
+          <p>Naslov oglasa: <span class="highlight">{{ report.reportedAdvertisment?.title }}</span></p>
+          <p>Oglas: <span class="highlight">{{ report.reportedAdvertisment?.description }}</span></p>
+          <div class="actions">
+            <button class="delete" (click)="removeReport(report.id)">Obriši prijavu</button>
+            <button class="warn" (click)="removeReportedContent(report)">Obriši prijavljeni sadržaj</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'reviews'">
+      <h2>Prijavljene Recenzije</h2>
+      <div class="loading" *ngIf="loading$ | async">Učitavanje...</div>
+      <div class="error" *ngIf="error$ | async as error">❌ {{ error }}</div>
+      <div class="reports-container">
+        <div class="report-card" *ngFor="let report of reports$ | async">
+        <p>Razlog prijave: <strong>{{ report.reason }}</strong></p>
+          <p>Prijavljena recenzija: <span class="highlight">{{ report.reportedReview?.comment }}</span></p>
+          <div class="actions">
+            <button class="delete" (click)="removeReport(report.id)">Obriši prijavu</button>
+            <button class="warn" (click)="removeReportedContent(report)">Obriši prijavljeni sadržaj</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

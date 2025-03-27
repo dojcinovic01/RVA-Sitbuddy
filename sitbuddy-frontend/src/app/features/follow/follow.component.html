@@ -1,4 +1,6 @@
-<button (click)="toggleFollow()" [class.following]="isFollowing$ | async">
-    {{ (isFollowing$ | async) ? 'Otprati' : 'Prati' }}
-  </button>
-  
+<button mat-stroked-button 
+        color="primary"
+        (click)="toggleFollow()" 
+        [class.following]="isFollowing$ | async">
+  {{ (isFollowing$ | async) ? 'Otprati' : 'Prati' }}
+</button>

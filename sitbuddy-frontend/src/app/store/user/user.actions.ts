@@ -8,9 +8,9 @@ export const updateUser = createAction('[User] Update User', props<{ userId: str
 export const updateUserSuccess = createAction('[User] Update User Success', props<{ user: any }>());
 export const updateUserFailure = createAction('[User] Update User Failure', props<{ error: string }>());
 
-export const deleteUser = createAction('[User] Delete User', props<{userId:string}>());
+export const deleteUser = createAction('[User] Delete User', props<{ userId: string }>());
 export const deleteUserSuccess = createAction('[User] Delete User Success');
-export const deleteUserFailure = createAction('[User] Delete User Failure', props<{error:string}>());
+export const deleteUserFailure = createAction('[User] Delete User Failure', props<{ error: string }>());
 
 export const searchUsers = createAction('[User] Search Users', props<{ query: string }>());
 export const searchUsersSuccess = createAction('[User] Search Users Success', props<{ users: any[] }>());

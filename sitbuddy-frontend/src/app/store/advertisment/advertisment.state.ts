@@ -12,7 +12,7 @@ export interface Advertisment {
     id: number;
     title: string;
     description: string;
-    adFrom?: User|null; // Dodaj ovaj property
+    adFrom?: User|null; 
 }
 
   

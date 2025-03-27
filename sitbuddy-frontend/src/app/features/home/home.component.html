@@ -1,0 +1,8 @@
+<div class="home-container">
+    <app-navbar></app-navbar>
+    
+    <main class="home-content">
+      <app-advertisment></app-advertisment>
+      <app-advertisment-list [user]="user$ | async"></app-advertisment-list>
+    </main>
+  </div>

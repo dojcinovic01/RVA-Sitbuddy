@@ -1,24 +1,36 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import { catchError, map, mergeMap, of, tap } from 'rxjs';
 import { UserService } from '../../core/services/user.service';
-import { loadUser, loadUserSuccess, loadUserFailure, updateUser, updateUserSuccess, updateUserFailure, deleteUser, deleteUserSuccess, deleteUserFailure, searchUsers, searchUsersSuccess, searchUsersFailure } from './user.actions';
-import { error } from 'node:console';
+import {
+  loadUser,
+  loadUserSuccess,
+  loadUserFailure,
+  updateUser,
+  updateUserSuccess,
+  updateUserFailure,
+  deleteUser,
+  deleteUserSuccess,
+  deleteUserFailure,
+  searchUsers,
+  searchUsersSuccess,
+  searchUsersFailure,
+} from './user.actions';
 import { logout } from '../auth/auth.actions';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 
 @Injectable()
 export class UserEffects {
-  constructor(private actions$: Actions, private userService: UserService, private store: Store,  private router: Router) {}
+  constructor(private actions$: Actions, private userService: UserService, private store: Store, private router: Router) {}
 
   loadUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadUser),
-      mergeMap(action =>
-        this.userService.getUser(action.userId).pipe(
-          map(user => loadUserSuccess({ user })),
-          catchError(error => of(loadUserFailure({ error: error.message })))
+      mergeMap(({ userId }) =>
+        this.userService.getUser(userId).pipe(
+          map((user) => loadUserSuccess({ user })),
+          catchError(({ message }) => of(loadUserFailure({ error: message })))
         )
       )
     )
@@ -27,49 +39,45 @@ export class UserEffects {
   updateUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(updateUser),
-      mergeMap(action =>
-        this.userService.updateUser(action.userId, action.updatedData).pipe(
-          map((user) => updateUserSuccess({ user })), 
-          catchError((error) => of(updateUserFailure({ error: error.message }))) 
+      mergeMap(({ userId, updatedData }) =>
+        this.userService.updateUser(userId, updatedData).pipe(
+          map((user) => updateUserSuccess({ user })),
+          catchError(({ message }) => of(updateUserFailure({ error: message })))
         )
       )
     )
   );
 
-  deleteUser$ = createEffect(()=>
+  deleteUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(deleteUser),
-      mergeMap(action=>
-        this.userService.deleteUser(action.userId).pipe(
-          map(()=> {
-            return deleteUserSuccess();
-        }),
-          catchError((error)=> of(deleteUserFailure({error:error.message})))
+      mergeMap(({ userId }) =>
+        this.userService.deleteUser(userId).pipe(
+          map(() => deleteUserSuccess()),
+          catchError(({ message }) => of(deleteUserFailure({ error: message })))
         )
       )
     )
   );
 
-  deleteUserSuccess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(deleteUserSuccess),
-      map(() => {
-        this.store.dispatch(logout()); 
-      })
-    ),
+  deleteUserSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(deleteUserSuccess),
+        tap(() => this.store.dispatch(logout()))
+      ),
     { dispatch: false }
   );
 
   searchUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(searchUsers),
-      mergeMap(action =>
-        this.userService.searchUsers(action.query).pipe(
-          map(users => searchUsersSuccess({ users })),
-          catchError(error => of(searchUsersFailure({ error: error.message })))
+      mergeMap(({ query }) =>
+        this.userService.searchUsers(query).pipe(
+          map((users) => searchUsersSuccess({ users })),
+          catchError(({ message }) => of(searchUsersFailure({ error: message })))
         )
       )
     )
   );
-  
 }

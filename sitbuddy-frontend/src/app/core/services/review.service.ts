@@ -4,38 +4,24 @@ import { Observable } from 'rxjs';
 import { Review } from '../../store/review/review.state';
 import { environment } from '../../../environments/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ReviewService {
-  private apiUrl = `${environment.apiUrl}/reviews`;  
+    private apiUrl = `${environment.apiUrl}/reviews`;
+    constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) {}
+    createReview(review: Omit<Review, 'id' | 'reviewFrom' | 'reviewTo'> & { reviewFromId: number; reviewToId: number }): Observable<Review> {
+        return this.http.post<Review>(`${this.apiUrl}/write`, review);
+    }
 
-  // Kreiranje recenzije
-  createReview(review: { comment: string; rating: number; reviewFromId: number; reviewToId: number }): Observable<Review> {
-    console.log('Review sent to backend:', review);
-    return this.http.post<Review>(`${this.apiUrl}/write`, review);
-}
+    getReviewsForUser(userId: number): Observable<Review[]> {
+        return this.http.get<Review[]>(`${this.apiUrl}/user/${userId}`);
+    }
 
-  // Dohvatanje svih recenzija
-  getAllReviews(): Observable<Review[]> {
-    return this.http.get<Review[]>(`${this.apiUrl}/allReviews`);
-  }
+    updateReview(review: Partial<Review> & { reviewId: number }): Observable<Review> {
+        return this.http.patch<Review>(`${this.apiUrl}/${review.reviewId}`, review);
+    }
 
-  // Dohvatanje recenzija za određenog korisnika (koji je primio recenzije)
-  getReviewsForUser(userId: number): Observable<Review[]> {
-    return this.http.get<Review[]>(`${this.apiUrl}/user/${userId}`);
-  }
-
-  // Ažuriranje recenzije
-  updateReview( review: { reviewId:number; comment: string; rating: number; }): Observable<Review> {
-    return this.http.patch<Review>(`${this.apiUrl}/${review.reviewId}`, review);
-  }
-
-  // Brisanje recenzije
-  deleteReview(id: number, userId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}?userId=${userId}`);
-  }
-
+    deleteReview(id: number, userId: number): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/${id}?userId=${userId}`);
+    }
 }

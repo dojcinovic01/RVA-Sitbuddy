@@ -1,46 +1,58 @@
 <div class="advertisment-list">
     <h2>Oglasi</h2>
-
-    <!-- Dugmad za filtriranje -->
+  
     <div class="filter-buttons">
-        <button (click)="loadAllAds()">Svi oglasi</button>
-        <button (click)="loadFollowedAds()">Profili koje pratim</button>
-        <button (click)="loadTopRatedAds()">Najbolje ocenjeni siteri</button>
-        <button (click)="loadCriminalProofAds()">Siteri sa potvrdom</button>
+      <button (click)="loadAllAds()">Svi oglasi</button>
+      <button (click)="loadFollowedAds()">Profili koje pratim</button>
+      <button (click)="loadTopRatedAds()">Najbolje ocenjeni siteri</button>
+      <button (click)="loadCriminalProofAds()">Siteri sa potvrdom</button>
     </div>
-
-    <div *ngFor="let ad of advertisments$ | async" class="advertisment" (click)="ad.adFrom && ad.adFrom.id && navigateToProfile(ad.adFrom.id)">
-        <div class="user-data">
-            <div class="user-info">
-                <img 
-                    [src]="ad.adFrom?.profilePicture 
-                        ? 'http://localhost:3000/uploads/profile-pictures/' + ad.adFrom?.profilePicture 
-                        : 'http://localhost:3000/uploads/profile-pictures/default-profile.png'" 
-                    alt="Profile Picture" 
-                    class="profile-pic">
-                <span>{{ ad.adFrom?.userType === 'parent' ? "Roditelj" : "Sitter" }}</span>
-                <span>{{ ad.adFrom?.fullName }}</span>
-                <span *ngIf="ad.adFrom?.userType==='sitter'" class="profile-rating" style="font-size: 14px; color:rgb(0, 0, 0); font-weight: bold;">
-                    ⭐ {{ad.adFrom?.averageRating?.toFixed(1) ?? 'N/A'}}
-                </span>
-                
-                <div class="criminal-proof" *ngIf="ad.adFrom?.userType === 'sitter'">
-                    <mat-icon *ngIf="ad.adFrom?.criminalRecordProof; else noProof" 
-                        matTooltip="Korisnik ima potvrdu o neosuđivanosti" matTooltipPosition="right" class="criminal-proof-icon">check_circle</mat-icon>
-                    <ng-template #noProof>
-                        <mat-icon matTooltip="Korisnik nema potvrdu o neosuđivanosti" matTooltipPosition="right" class="criminal-proof-icon">error</mat-icon>
-                    </ng-template>
-                </div>
-                
-                
-            </div>
-    
-            <div class="report">
-                <mat-icon matTooltip="Prijavi oglas" matTooltipPosition="left" (click)="ad.adFrom && openReportDialog(ad.id, ad.adFrom.id, ad.title, $event)">report_problem</mat-icon>
-            </div>
+  
+    <div *ngFor="let ad of advertisments$ | async" 
+         class="advertisment" 
+         (click)="ad.adFrom && ad.adFrom.id ? navigateToProfile(ad.adFrom.id) : null">
+      
+      <div class="user-data">
+        <div class="user-info">
+          <img [src]="getProfileImage(ad.adFrom?.profilePicture)" 
+               alt="Profile Picture" 
+               class="profile-pic">
+          
+          <span>{{ getUserTypeLabel(ad.adFrom?.userType) }}</span>
+          <span>{{ ad.adFrom?.fullName }}</span>
+          
+          <span *ngIf="ad.adFrom?.userType === 'sitter'" 
+                class="profile-rating">
+            ⭐ {{ getRatingDisplay(ad.adFrom?.averageRating) }}
+          </span>
+          
+          <div class="criminal-proof" *ngIf="ad.adFrom?.userType === 'sitter'">
+            <mat-icon *ngIf="ad.adFrom?.criminalRecordProof; else noProof" 
+                     matTooltip="Korisnik ima potvrdu o neosuđivanosti" 
+                     matTooltipPosition="right" 
+                     class="criminal-proof-icon">
+              check_circle
+            </mat-icon>
+            <ng-template #noProof>
+              <mat-icon matTooltip="Korisnik nema potvrdu o neosuđivanosti" 
+                       matTooltipPosition="right" 
+                       class="criminal-proof-icon">
+                error
+              </mat-icon>
+            </ng-template>
+          </div>
         </div>
         
-        <h3>{{ ad.title }}</h3>
-        <p>{{ ad.description }}</p>
+        <div class="report">
+          <mat-icon matTooltip="Prijavi oglas" 
+                   matTooltipPosition="left" 
+                   (click)="ad.adFrom && openReportDialog(ad.id, ad.adFrom.id, ad.title, $event)">
+            report_problem
+          </mat-icon>
+        </div>
+      </div>
+      
+      <h3>{{ ad.title }}</h3>
+      <p>{{ ad.description }}</p>
     </div>
-</div>
+  </div>

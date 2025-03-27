@@ -1,51 +1,94 @@
-<div class="review-container">
+<div class="container">
   <h3>Recenzije</h3>
 
-  <!-- Ako korisnik već ima recenziju, prikazuje se -->
-  <div *ngIf="userReview as review; else addReviewForm" class="user-review">
-    <div *ngIf="!isEditing">
-      <p class="review-author">{{ review.reviewFrom.fullName }}</p>
-      <p class="review-rating">{{ review.rating }} ★</p>
-      <p class="review-comment">{{ review.comment }}</p>
-    </div>
-
-    <form *ngIf="isEditing" (ngSubmit)="updateReview(review.id)" class="edit-form">
-      <textarea [(ngModel)]="editedReview.comment" placeholder="Ažurirajte komentar..." name="edit-comment"></textarea>
-      <select [(ngModel)]="editedReview.rating" name="edit-rating">
-        <option *ngFor="let r of [1, 2, 3, 4, 5]" [value]="r">{{ r }} ★</option>
-      </select>
-      <div class="form-actions">
-        <button type="submit">Sačuvaj</button>
-        <button type="button" class="cancel-btn" (click)="isEditing = false">Otkaži</button>
+  <!-- User Review Section -->
+  <ng-container *ngIf="userReview as review; else addReviewTemplate">
+    <div class="review-card">
+      <!-- Review Display Mode -->
+      <div *ngIf="!isEditing" class="review-display">
+        <p class="review-author">{{ review.reviewFrom.fullName }}</p>
+        <p class="review-rating">{{ review.rating }} ★</p>
+        <p class="review-comment">{{ review.comment }}</p>
       </div>
-    </form>
 
-    <div class="review-actions">
-      <button class="edit-btn" (click)="toggleEditMode()">✏️ Izmeni</button>
-      <button class="delete-btn" (click)="deleteReview(review.id)">🗑️ Obriši</button>
+      <!-- Review Edit Mode -->
+      <form *ngIf="isEditing" 
+            (ngSubmit)="updateReview(review.id)" 
+            class="edit-form">
+        <textarea [(ngModel)]="editedReview.comment" 
+                  name="edit-comment"
+                  placeholder="Ažurirajte komentar...">
+        </textarea>
+        
+        <select [(ngModel)]="editedReview.rating" 
+                name="edit-rating">
+          <option *ngFor="let rating of [1, 2, 3, 4, 5]" 
+                  [value]="rating">
+            {{ rating }} ★
+          </option>
+        </select>
+        
+        <div class="form-actions">
+          <button type="submit">Sačuvaj</button>
+          <button type="button" 
+                  class="cancel-btn" 
+                  (click)="isEditing = false">
+            Otkaži
+          </button>
+        </div>
+      </form>
+
+      <!-- Review Actions -->
+      <div class="review-actions">
+        <button class="edit-btn" 
+                (click)="toggleEditMode()">
+          ✏️ Izmeni
+        </button>
+        <button class="delete-btn" 
+                (click)="deleteReview(review.id)">
+          🗑️ Obriši
+        </button>
+      </div>
     </div>
-  </div>
+  </ng-container>
 
-  <!-- Forma za dodavanje recenzije ako korisnik nema -->
-  <ng-template #addReviewForm>
+  <!-- Add Review Template -->
+  <ng-template #addReviewTemplate>
     <div class="review-form">
-      <textarea [(ngModel)]="newReview.comment" placeholder="Ostavite komentar..."></textarea>
+      <textarea [(ngModel)]="newReview.comment" 
+                placeholder="Ostavite komentar...">
+      </textarea>
+      
       <select [(ngModel)]="newReview.rating">
-        <option *ngFor="let r of [1, 2, 3, 4, 5]" [value]="r">{{ r }} ★</option>
+        <option *ngFor="let rating of [1, 2, 3, 4, 5]" 
+                [value]="rating">
+          {{ rating }} ★
+        </option>
       </select>
-      <button class="add-btn" (click)="submitReview()">Dodaj recenziju</button>
+      
+      <button class="add-btn" 
+              (click)="submitReview()">
+        Dodaj recenziju
+      </button>
     </div>
   </ng-template>
 
-  <!-- Lista svih recenzija -->
+  <!-- Reviews List -->
   <div class="review-list">
-    <div *ngFor="let review of reviews$ | async" class="review-card">
+    <div *ngFor="let review of reviews$ | async" 
+         class="review-card">
       <p class="review-author">{{ review.reviewFrom.fullName }}</p>
       <p class="review-rating">{{ review.rating }} ★</p>
       <p class="review-comment">{{ review.comment }}</p>
+      
       <div class="report">
-        <mat-icon matTooltip="Prijavi recenziju" color="black" matTooltipPosition="right" (click)="openReportDialog(review.id, $event)">report_problem</mat-icon>
-    </div>
+        <mat-icon matTooltip="Prijavi recenziju" 
+                 color="black" 
+                 matTooltipPosition="right" 
+                 (click)="openReportDialog(review.id, $event)">
+          report_problem
+        </mat-icon>
+      </div>
     </div>
   </div>
 </div>

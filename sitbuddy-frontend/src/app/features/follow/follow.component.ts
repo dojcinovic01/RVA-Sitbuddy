@@ -1,4 +1,3 @@
-// follow.component.ts
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { first, map, Observable } from 'rxjs';
@@ -25,14 +24,21 @@ export class FollowComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(FollowActions.loadFollowing({ userId: Number(this.loogedInId) }));
-
-    this.isFollowing$ = this.store.select(selectFollowing).pipe(
-        map(following => following.some((user: any) => user.id === Number(this.profileId)))
-    );
-      
+    this.loadFollowingData();
+    this.checkIfFollowing();
   }
   
+  private loadFollowingData(): void {
+    this.store.dispatch(FollowActions.loadFollowing({ 
+      userId: Number(this.loogedInId) 
+    }));
+  }
+
+  private checkIfFollowing(): void {
+    this.isFollowing$ = this.store.select(selectFollowing).pipe(
+      map(following => following.some((user: any) => user.id === Number(this.profileId)))
+   );
+  }
 
   toggleFollow() {
     this.isFollowing$?.pipe(first()).subscribe(isFollowing => {

@@ -1,22 +1,20 @@
 import { createAction, props } from '@ngrx/store';
 import { Review } from './review.state';
 
-// Učitavanje recenzija za korisnika
-export const loadReviews = createAction('[Review] Load Reviews', props<{ userId: number }>());
-export const loadReviewsSuccess = createAction('[Review] Load Reviews Success', props<{ reviews: Review[] }>());
-export const loadReviewsFailure = createAction('[Review] Load Reviews Failure', props<{ error: string }>());
+const source = '[Review]';
 
-// Dodavanje recenzije
-export const addReview = createAction('[Review] Add Review',props<{ review: { comment: string; rating: number; reviewFromId: number; reviewToId: number } }>());
-export const addReviewSuccess = createAction('[Review] Add Review Success', props<{ review: Review }>());
-export const addReviewFailure = createAction('[Review] Add Review Failure', props<{ error: string }>());
+export const loadReviews = createAction(`${source} Load`, props<{ userId: number }>());
+export const loadReviewsSuccess = createAction(`${source} Load Success`, props<{ reviews: Review[] }>());
+export const loadReviewsFailure = createAction(`${source} Load Failure`, props<{ error: string }>());
 
-// Ažuriranje recenzije
-export const updateReview = createAction('[Review] Update Review', props<{ review: { reviewId:number; comment: string; rating: number; } }>());
-export const updateReviewSuccess = createAction('[Review] Update Review Success', props<{ review: Review }>());
-export const updateReviewFailure = createAction('[Review] Update Review Failure', props<{ error: string }>());
+export const addReview = createAction(`${source} Add`, props<{ review: Omit<Review, 'id' | 'reviewFrom' | 'reviewTo'> & { reviewFromId: number; reviewToId: number } }>());
+export const addReviewSuccess = createAction(`${source} Add Success`, props<{ review: Review }>());
+export const addReviewFailure = createAction(`${source} Add Failure`, props<{ error: string }>());
 
-// Brisanje recenzije
-export const deleteReview = createAction('[Review] Delete Review', props<{ reviewId: number, reviewFromId:number }>());
-export const deleteReviewSuccess = createAction('[Review] Delete Review Success', props<{ id: number }>());
-export const deleteReviewFailure = createAction('[Review] Delete Review Failure', props<{ error: string }>());
+export const updateReview = createAction(`${source} Update`, props<{ review: Partial<Review> & { reviewId: number } }>());
+export const updateReviewSuccess = createAction(`${source} Update Success`, props<{ review: Review }>());
+export const updateReviewFailure = createAction(`${source} Update Failure`, props<{ error: string }>());
+
+export const deleteReview = createAction(`${source} Delete`, props<{ reviewId: number; reviewFromId: number }>());
+export const deleteReviewSuccess = createAction(`${source} Delete Success`, props<{ id: number }>());
+export const deleteReviewFailure = createAction(`${source} Delete Failure`, props<{ error: string }>());

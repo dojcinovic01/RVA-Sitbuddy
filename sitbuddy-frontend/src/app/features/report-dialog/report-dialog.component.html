@@ -1,8 +1,7 @@
 <div class="dialog-container">
   <h2 mat-dialog-title class="dialog-title">{{ title }}</h2>
-
+  
   <mat-dialog-content class="dialog-content">
-
     <form [formGroup]="reportForm">
       <mat-form-field class="full-width">
         <mat-label>Unesite razlog prijave</mat-label>
@@ -18,4 +17,5 @@
     <button mat-button (click)="closeDialog()">Otkaži</button>
     <button mat-button color="warn" (click)="submitReport()" [disabled]="reportForm.invalid">Prijavi</button>
   </mat-dialog-actions>
+  
 </div>
