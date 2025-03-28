@@ -5,6 +5,7 @@ import { selectUser } from '../../store/user/user.selectors';
 import { GeolocationService } from './geolocation.service';
 import { take } from 'rxjs';
 import { UserService } from './user.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,7 @@ export class MapService {
   private defaultCenter: google.maps.LatLngLiteral = { lat: 42.6152875, lng: 22.3984821 };
   private defaultZoom = 12;
   private map: google.maps.Map | null = null;
+  private imagesUrl= environment.imageUrl;
 
   constructor(
     @Inject(Store) private store: Store,
@@ -91,7 +93,7 @@ export class MapService {
 
   private createMarkerContent(markerData: MarkerData, onClick: (id: number) => void): HTMLElement {
     const profilePictureUrl = markerData.profilePicture
-      ? `http://localhost:3000/uploads/profile-pictures/${markerData.profilePicture}`
+      ? `${this.imagesUrl}/profile-pictures/${markerData.profilePicture}`
       : null;
 
     const defaultIcon = `<span style="font-size: 40px;">👤</span>`;

@@ -1,28 +1,83 @@
 .home-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background:rgb(255, 255, 255);
-  }
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: rgb(255, 255, 255);
+  width: 100%;
+}
 
-  .homePage {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-    color: white;
+.home-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 30px;
+  
+  @media (max-width: 1024px) {
+    padding: 15px;
+    gap: 25px;
   }
+  
+  @media (max-width: 768px) {
+    padding: 12px;
+    gap: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 10px;
+    gap: 15px;
+  }
+}
 
-  h1 {
-    font-size: 32px;
+/* Stilovi za reklamne komponente - pretpostavka */
+app-advertisment {
+  width: 100%;
+  margin-bottom: 20px;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 15px;
+  }
+}
+
+app-advertisment-list {
+  width: 100%;
+}
+
+/* Opcioni stilovi za naslove i tekst */
+.homePage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  color: #00224D; /* Promenjena boja za bolji kontrast na beloj pozadini */
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+}
+
+h1 {
+  font-size: clamp(24px, 3vw, 32px); /* Responsivan font size */
+  margin-bottom: 15px;
+  color: #00224D;
+  font-weight: 600;
+  
+  @media (max-width: 480px) {
     margin-bottom: 10px;
-    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.2);
   }
+}
 
-  p {
-    font-size: 18px;
-    opacity: 0.9;
+p {
+  font-size: clamp(16px, 2vw, 18px);
+  color: #333;
+  line-height: 1.5;
+  max-width: 800px;
+  margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    line-height: 1.4;
   }
+}

@@ -11,10 +11,7 @@ import { Advertisment, User } from '../../store/advertisment/advertisment.state'
 import * as AdvertismentActions from '../../store/advertisment/advertisment.actions';
 import { selectAllAdvertisments } from '../../store/advertisment/advertisment.selectors';
 import { ReportDialogComponent } from '../report-dialog/report-dialog.component';
-
-const DIALOG_WIDTH = '400px';
-const DEFAULT_PROFILE_IMAGE = 'http://localhost:3000/uploads/profile-pictures/default-profile.png';
-const PROFILE_IMAGE_BASE = 'http://localhost:3000/uploads/profile-pictures/';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-advertisment-list',
@@ -32,6 +29,7 @@ const PROFILE_IMAGE_BASE = 'http://localhost:3000/uploads/profile-pictures/';
 export class AdvertismentListComponent implements OnInit {
   @Input() user?: User | null;
   advertisments$: Observable<Advertisment[]>;
+  private imagesUrl = `${environment.imageUrl}`;
 
   constructor(
     private store: Store,
@@ -94,7 +92,7 @@ export class AdvertismentListComponent implements OnInit {
     adTitle: string
   ): void {
     const dialogRef = this.dialog.open(ReportDialogComponent, {
-      width: DIALOG_WIDTH,
+      width: '400px',
       data: this.createReportDialogData(adId, reportedUserId, adTitle)
     });
 
@@ -117,7 +115,7 @@ export class AdvertismentListComponent implements OnInit {
   }
 
   getProfileImage(profilePicture?: string): string {
-    return profilePicture ? `${PROFILE_IMAGE_BASE}${profilePicture}` : DEFAULT_PROFILE_IMAGE;
+    return profilePicture ? `${this.imagesUrl+'/profile-pictures/'}${profilePicture}` : this.imagesUrl+ '/profile-pictures/default-profile.png';
   }
 
   getUserTypeLabel(userType?: string): string {

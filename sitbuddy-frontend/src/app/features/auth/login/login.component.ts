@@ -12,7 +12,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { login } from '../../../store/auth/auth.actions';
-import { selectToken } from '../../../store/auth/auth.selectors';
+import { selectAuthError, selectToken } from '../../../store/auth/auth.selectors';
 import { selectUser } from '../../../store/user/user.selectors';
 
 @Component({
@@ -62,6 +62,11 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     if (this.loginForm.valid) {
       this.store.dispatch(login(this.loginForm.value));
+      this.store.select(selectAuthError).subscribe(error => {
+        if (error) {
+          alert('Pogrešna email adresa ili lozinka!');
+        }
+      });
       this.user$ = this.store.select(selectUser);
     }
   }

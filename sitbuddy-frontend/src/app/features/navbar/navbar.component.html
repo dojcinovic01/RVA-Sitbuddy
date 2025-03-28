@@ -33,7 +33,9 @@
         </a>
       </li>
       <li *ngIf="(token$ | async) as token">
-        <mat-icon (click)="onLogout()">exit_to_app</mat-icon>
+        <a (click)="onLogout()" style="cursor: pointer">
+          <mat-icon>exit_to_app</mat-icon>
+        </a>
       </li>
     </ul>
   </nav>

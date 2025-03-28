@@ -8,13 +8,13 @@ button {
   
     &.following {
       background: #d91b3a;
-      color: white;
+      color: black;
      
     }
   
     &:not(.following) {
       background: #ff204e;
-      color: white;
+      color: black;
     }
   
     &:hover {
